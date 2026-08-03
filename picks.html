@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Sutanu's Picks — mywealth.fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+
+<style>
+:root{--navy:#0d2244;--navy2:#162f5c;--gold:#C9963A;--gold-l:#FDF6E8;--cream:#FAFAF7;--white:#FFFFFF;--ink:#1A1A2E;--muted:#6B7280;--border:#E5E7EB;--success:#15803D;--success-l:#F0FDF4;--danger:#DC2626;--danger-l:#FEF2F2;--warn:#D97706;--warn-l:#FFFBEB;--r:12px;--r-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,select{font-family:inherit}
+a{color:inherit;text-decoration:none}
+.nav{background:var(--navy);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.nav-back{color:rgba(255,255,255,.7);font-size:14px;display:flex;align-items:center;gap:5px;flex:1}
+.nav-title{font-size:15px;font-weight:600;color:#fff;text-align:center;flex:2}
+.nav-spacer{flex:1}
+.screen{display:none;min-height:calc(100vh - 56px)}
+.screen.active{display:block}
+.hero{background:var(--navy);padding:32px 20px;text-align:center}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-title{font-size:clamp(22px,6vw,32px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:8px}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);line-height:1.6}
+.section{padding:24px 20px}
+.opt-grid{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .12s}
+.opt:hover{border-color:var(--navy)}
+.opt.selected{border-color:var(--navy);background:rgba(13,34,68,.03)}
+.opt-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0}
+.opt-text .ot{font-size:15px;font-weight:500}
+.opt-text .os{font-size:13px;color:var(--muted)}
+.check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+.opt.selected .check{background:var(--navy);border-color:var(--navy);color:#fff}
+.q-title{font-size:17px;font-weight:600;margin-bottom:6px}
+.q-sub{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:0 20px 20px}
+.prog-fill{height:100%;background:var(--gold);transition:width .3s}
+.btn-primary{background:var(--navy);color:#fff;font-size:16px;font-weight:600;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none}
+.btn-primary:disabled{opacity:.4}
+.btn-gold{background:var(--gold);color:var(--navy);font-size:16px;font-weight:700;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;width:100%;border:none}
+.btn-section{padding:0 20px 32px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.result-bar{background:var(--navy);padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-circle{width:68px;height:68px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.score-num{font-size:20px;font-weight:700;color:var(--gold)}
+.score-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em}
+.result-text .rt{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.result-text .rs{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5}
+.insight-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:0 20px 10px}
+.ic-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ic-icon{font-size:20px;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ic-title{font-size:15px;font-weight:600}
+.ic-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:auto}
+.badge-green{background:var(--success-l);color:var(--success)}
+.badge-yellow{background:var(--warn-l);color:var(--warn)}
+.badge-red{background:var(--danger-l);color:var(--danger)}
+.badge-blue{background:#EFF6FF;color:#1D4ED8}
+.ic-body{font-size:14px;color:var(--muted);line-height:1.6}
+.ic-action{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:13px;font-weight:600;color:var(--navy)}
+.input-field{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:16px;width:100%;color:var(--ink);background:var(--white)}
+.input-field:focus{outline:none;border-color:var(--navy)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;font-weight:500;display:block;margin-bottom:6px;color:var(--ink)}
+.safe{height:40px}
+</style>
+<style>
+.picks-hero{background:var(--navy);padding:28px 20px 32px}
+.picks-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.picks-title{font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3}
+.picks-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6}
+.picks-date{font-size:12px;color:rgba(255,255,255,.35);margin-top:8px}
+.pick-card{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:16px 20px 0}
+.pc-header{padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:flex-start}
+.pc-left .pc-type{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.pc-left .pc-name{font-size:20px;font-weight:700;color:var(--ink)}
+.pc-left .pc-ticker{font-size:13px;color:var(--muted)}
+.pc-right .pc-rating{font-size:28px;font-weight:700;text-align:right}
+.pc-right .pc-rating-label{font-size:11px;color:var(--muted);text-align:right}
+.pc-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border)}
+.pc-meta-item{background:var(--white);padding:10px 12px;text-align:center}
+.pc-meta-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.pc-meta-val{font-size:14px;font-weight:600;color:var(--ink)}
+.pc-body{padding:16px}
+.pc-thesis-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.pc-thesis{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.pc-risks{background:var(--warn-l);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#92400E;line-height:1.6}
+.pc-action{background:var(--navy);border-radius:8px;padding:12px 14px;font-size:14px;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.pc-sub-label{font-size:12px;font-weight:400;color:rgba(255,255,255,.55);margin-top:2px}
+.disclaimer{margin:20px;padding:14px;background:rgba(13,34,68,.04);border-radius:var(--r);font-size:12px;color:var(--muted);line-height:1.7}
+.substack-cta{margin:16px 20px 32px;background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r);padding:20px;text-align:center}
+.sc-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:6px}
+.sc-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:14px;line-height:1.5}
+.sc-btn{background:var(--gold);color:var(--navy);font-size:14px;font-weight:700;padding:12px 20px;border-radius:8px;display:inline-block}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-back">← Home</a>
+  <div class="nav-title">Sutanu's Picks</div>
+  <div class="nav-spacer"></div>
+</nav>
+
+<div class="picks-hero">
+  <div class="picks-tag">Curated weekly · SEBI RIA</div>
+  <div class="picks-title">Stock of the Week &amp; MF of the Month</div>
+  <div class="picks-sub">Sutanu's own research — with full reasoning, risks, and entry levels. Not clickbait. Not tips.</div>
+  <div class="picks-date">Updated: 31 Jul 2026</div>
+</div>
+
+<div class="pick-card">
+  <div class="pc-header">
+    <div class="pc-left">
+      <div class="pc-type">⭐ Stock of the week</div>
+      <div class="pc-name">Power Grid Corp</div>
+      <div class="pc-ticker">POWERGRID · NSE</div>
+    </div>
+    <div class="pc-right">
+      <div class="pc-rating" style="color:var(--success)">BUY</div>
+      <div class="pc-rating-label">CMP ₹285</div>
+    </div>
+  </div>
+  <div class="pc-meta">
+    <div class="pc-meta-item"><div class="pc-meta-label">52W Range</div><div class="pc-meta-val">₹250-325</div></div>
+    <div class="pc-meta-item"><div class="pc-meta-label">PE Ratio</div><div class="pc-meta-val">16.6x</div></div>
+    <div class="pc-meta-item"><div class="pc-meta-label">Div Yield</div><div class="pc-meta-val">4.75%</div></div>
+  </div>
+  <div class="pc-body">
+    <div class="pc-thesis-label">The thesis</div>
+    <div class="pc-thesis">Power Grid is the cheapest quality infrastructure stock in India right now. At 16.6x PE and 4.75% dividend yield, you're being paid to wait for the rate cut (October MPC). The company has ₹1,95,000 crore of projects in the pipeline — essentially a decade of visibility. When the RBI cuts rates, regulated utilities like Power Grid re-rate automatically because their DCF value rises. This is as close to a risk-free entry as you'll find in equity markets.</div>
+    <div class="pc-risks">⚠ Risk: Right-of-way delays and rate cut being pushed further (if crude spikes again) could delay the re-rating. Crude staying above ₹85 = rate cut delayed = Power Grid re-rating delayed. Not a growth story — a value + income story.</div>
+    <div class="pc-action">
+      <div><div>Entry: ₹280-295</div><div class="pc-sub-label">Target ₹325 · Stop ₹265</div></div>
+      <div style="font-size:20px">⚡</div>
+    </div>
+  </div>
+</div>
+
+<div class="pick-card" style="margin-top:12px">
+  <div class="pc-header">
+    <div class="pc-left">
+      <div class="pc-type">📈 MF of the month</div>
+      <div class="pc-name">HDFC Large Cap Fund</div>
+      <div class="pc-ticker">Regular · Growth · Direct</div>
+    </div>
+    <div class="pc-right">
+      <div class="pc-rating" style="color:var(--success)">ADD</div>
+      <div class="pc-rating-label">via SIP</div>
+    </div>
+  </div>
+  <div class="pc-meta">
+    <div class="pc-meta-item"><div class="pc-meta-label">5-yr CAGR</div><div class="pc-meta-val">17.8%</div></div>
+    <div class="pc-meta-item"><div class="pc-meta-label">vs Nifty 50</div><div class="pc-meta-val">+2.3%</div></div>
+    <div class="pc-meta-item"><div class="pc-meta-label">Expense</div><div class="pc-meta-val">0.82%</div></div>
+  </div>
+  <div class="pc-body">
+    <div class="pc-thesis-label">Why this month</div>
+    <div class="pc-thesis">Large cap funds are poised for a strong H2 FY27 as FPI re-entry accelerates (already seeing 3-week buy streak) and the rate cut cycle begins. HDFC Large Cap has consistently beaten Nifty 50 by 2-3% annually over 5 years with lower volatility. At the start of an FPI re-entry cycle, large caps benefit first and most.</div>
+    <div class="pc-risks">⚠ Not the highest return option. Midcap and flexicap funds will likely outperform in a bull run. This is for investors who want large-cap stability with index-beating returns.</div>
+    <div class="pc-action">
+      <div><div>Suggested SIP: ₹5,000+/month</div><div class="pc-sub-label">Direct plan · Growth option</div></div>
+      <div style="font-size:20px">📊</div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <b>Disclaimer:</b> These picks are Sutanu Bhowmick's personal research and views as a SEBI-registered investment advisor. They are for informational and educational purposes only. Past performance does not guarantee future returns. Please consult your financial advisor before investing. Investments are subject to market risk.
+</div>
+
+<div class="substack-cta">
+  <div class="sc-title">Get weekly market analysis</div>
+  <div class="sc-sub">Sutanu publishes a weekly India Market Pulse on Substack — FPI flows, macro signals, and portfolio ideas. Free to read.</div>
+  <a href="https://sutanus10xmarathon.substack.com" target="_blank" class="sc-btn">Read on Substack →</a>
+</div>
+
+<div class="safe"></div>
+</body>
+</html>

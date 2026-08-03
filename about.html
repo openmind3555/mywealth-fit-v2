@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>About Sutanu — mywealth.fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+
+<style>
+:root{--navy:#0d2244;--navy2:#162f5c;--gold:#C9963A;--gold-l:#FDF6E8;--cream:#FAFAF7;--white:#FFFFFF;--ink:#1A1A2E;--muted:#6B7280;--border:#E5E7EB;--success:#15803D;--success-l:#F0FDF4;--danger:#DC2626;--danger-l:#FEF2F2;--warn:#D97706;--warn-l:#FFFBEB;--r:12px;--r-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,select{font-family:inherit}
+a{color:inherit;text-decoration:none}
+.nav{background:var(--navy);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.nav-back{color:rgba(255,255,255,.7);font-size:14px;display:flex;align-items:center;gap:5px;flex:1}
+.nav-title{font-size:15px;font-weight:600;color:#fff;text-align:center;flex:2}
+.nav-spacer{flex:1}
+.screen{display:none;min-height:calc(100vh - 56px)}
+.screen.active{display:block}
+.hero{background:var(--navy);padding:32px 20px;text-align:center}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-title{font-size:clamp(22px,6vw,32px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:8px}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);line-height:1.6}
+.section{padding:24px 20px}
+.opt-grid{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .12s}
+.opt:hover{border-color:var(--navy)}
+.opt.selected{border-color:var(--navy);background:rgba(13,34,68,.03)}
+.opt-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0}
+.opt-text .ot{font-size:15px;font-weight:500}
+.opt-text .os{font-size:13px;color:var(--muted)}
+.check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+.opt.selected .check{background:var(--navy);border-color:var(--navy);color:#fff}
+.q-title{font-size:17px;font-weight:600;margin-bottom:6px}
+.q-sub{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:0 20px 20px}
+.prog-fill{height:100%;background:var(--gold);transition:width .3s}
+.btn-primary{background:var(--navy);color:#fff;font-size:16px;font-weight:600;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none}
+.btn-primary:disabled{opacity:.4}
+.btn-gold{background:var(--gold);color:var(--navy);font-size:16px;font-weight:700;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;width:100%;border:none}
+.btn-section{padding:0 20px 32px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.result-bar{background:var(--navy);padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-circle{width:68px;height:68px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.score-num{font-size:20px;font-weight:700;color:var(--gold)}
+.score-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em}
+.result-text .rt{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.result-text .rs{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5}
+.insight-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:0 20px 10px}
+.ic-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ic-icon{font-size:20px;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ic-title{font-size:15px;font-weight:600}
+.ic-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:auto}
+.badge-green{background:var(--success-l);color:var(--success)}
+.badge-yellow{background:var(--warn-l);color:var(--warn)}
+.badge-red{background:var(--danger-l);color:var(--danger)}
+.badge-blue{background:#EFF6FF;color:#1D4ED8}
+.ic-body{font-size:14px;color:var(--muted);line-height:1.6}
+.ic-action{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:13px;font-weight:600;color:var(--navy)}
+.input-field{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:16px;width:100%;color:var(--ink);background:var(--white)}
+.input-field:focus{outline:none;border-color:var(--navy)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;font-weight:500;display:block;margin-bottom:6px;color:var(--ink)}
+.safe{height:40px}
+</style>
+<style>
+.avatar{width:80px;height:80px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;margin:0 auto 16px;border:3px solid var(--gold)}
+.hero-center{text-align:center;padding:36px 20px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px 24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.stat-num{font-size:26px;font-weight:700;color:var(--navy)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+.timeline-item{display:flex;gap:14px;margin-bottom:16px}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px}
+.tl-line{width:1px;background:var(--border);flex-shrink:0}
+.tl-year{font-size:12px;font-weight:600;color:var(--gold)}
+.tl-text{font-size:14px;color:var(--muted);line-height:1.6}
+.contact-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+.contact-item:last-child{border-bottom:none}
+.ci-icon{font-size:20px;width:40px;text-align:center}
+.ci-text .ct{font-size:14px;font-weight:600}
+.ci-text .cs{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-back">← Home</a>
+  <div class="nav-title">About Sutanu</div>
+  <div class="nav-spacer"></div>
+</nav>
+
+<div class="hero-center">
+  <div class="avatar">SB</div>
+  <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">Sutanu Bhowmick</h1>
+  <div style="font-size:15px;color:var(--muted);margin-bottom:14px">Investment Advisor · Mumbai</div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">
+    <div style="background:rgba(13,34,68,.07);border:1px solid rgba(13,34,68,.12);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--navy)">NISM XA &amp; XB</div>
+    <div style="background:rgba(13,34,68,.07);border:1px solid rgba(13,34,68,.12);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--navy)">AMFI Registered</div>
+    <div style="background:rgba(13,34,68,.07);border:1px solid rgba(13,34,68,.12);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--navy)">PMS Distributor</div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-num">15+</div><div class="stat-label">Years in Indian equity markets</div></div>
+  <div class="stat-card"><div class="stat-num">₹20 Cr</div><div class="stat-label">Portfolio under personal management</div></div>
+  <div class="stat-card"><div class="stat-num">15%+</div><div class="stat-label">Avg yearly returns after tax</div></div>
+  <div class="stat-card"><div class="stat-num">Europe</div><div class="stat-label">Global banking background</div></div>
+</div>
+
+<div style="padding:0 20px 24px">
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px">
+    <div style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:18px;color:var(--ink);line-height:1.6;margin-bottom:12px">"I built mywealth.fit because I kept meeting intelligent, hardworking people who were making completely avoidable mistakes with their money — not from lack of intelligence, but from lack of an honest second opinion."</div>
+    <div style="font-size:13px;color:var(--muted)">— Sutanu Bhowmick</div>
+  </div>
+</div>
+
+<div style="padding:0 20px 24px">
+  <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:16px">Credentials &amp; experience</div>
+
+  <div class="timeline-item"><div>
+    <div class="tl-year">15 years · Indian equity markets</div>
+    <div class="tl-text">Deep experience in Indian stocks across multiple market cycles — 2008 crisis, COVID crash, the 2025 Iran conflict. Currently managing a ₹20 crore personal portfolio delivering 15%+ average yearly returns after tax.</div>
+  </div></div>
+
+  <div class="timeline-item"><div>
+    <div class="tl-year">Global banking · European institution</div>
+    <div class="tl-text">Prior career in a leading European bank — exposure to global capital markets, institutional investment frameworks, and cross-border portfolio structures. Brings a global lens to India-focused investing.</div>
+  </div></div>
+
+  <div class="timeline-item"><div>
+    <div class="tl-year">NISM XA &amp; XB Certified</div>
+    <div class="tl-text">National Institute of Securities Markets certifications in Investment Advisory — the mandatory qualification for SEBI-registered investment advisors in India.</div>
+  </div></div>
+
+  <div class="timeline-item"><div>
+    <div class="tl-year">AMFI Registered · MF &amp; PMS Distributor</div>
+    <div class="tl-text">Registered with the Association of Mutual Funds in India. Also a registered PMS distributor — able to advise on and facilitate Portfolio Management Services for eligible clients.</div>
+  </div></div>
+
+  <div class="timeline-item" style="margin-bottom:0"><div>
+    <div class="tl-year">The 10X Marathon · Substack</div>
+    <div class="tl-text">Publishes a weekly India Market Pulse on Substack covering FPI flows, macro signals, and portfolio moves — fully transparent, data-led, and free to read.</div>
+  </div></div>
+</div>
+
+<div style="padding:0 20px;margin-bottom:24px">
+  <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px">Get in touch</div>
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
+    <div class="contact-item" style="padding:14px 16px">
+      <div class="ci-icon">✉️</div>
+      <div class="ci-text"><div class="ct">openmind3555@gmail.com</div><div class="cs">Portfolio review, advisory enquiries</div></div>
+    </div>
+    <div class="contact-item" style="padding:14px 16px">
+      <div class="ci-icon">📝</div>
+      <div class="ci-text"><div class="ct">Substack: Sutanu's 10X Marathon</div><div class="cs">Weekly India market analysis — free</div></div>
+    </div>
+    <div class="contact-item" style="padding:14px 16px;border-bottom:none">
+      <div class="ci-icon">🔒</div>
+      <div class="ci-text"><div class="ct">Your data stays private</div><div class="cs">No data sold. No third-party sharing.</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 20px 32px">
+  <button class="btn-gold" onclick="location.href='review.html'">Get your portfolio reviewed →</button>
+</div>
+
+<div style="padding:16px 20px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--border);line-height:1.8">
+  SEBI Registered Investment Advisor · mywealth.fit · Sutanu Bhowmick<br>
+  This platform is for educational and advisory purposes only. Investments are subject to market risk.
+</div>
+<div class="safe"></div>
+</body>
+</html>

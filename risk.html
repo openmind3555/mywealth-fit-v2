@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Risk Profile — mywealth.fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--navy:#0d2244;--navy2:#162f5c;--gold:#C9963A;--gold-l:#FDF6E8;--cream:#FAFAF7;--white:#FFFFFF;--ink:#1A1A2E;--muted:#6B7280;--border:#E5E7EB;--success:#15803D;--success-l:#F0FDF4;--danger:#DC2626;--danger-l:#FEF2F2;--warn:#D97706;--warn-l:#FFFBEB;--r:12px;--r-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,select{font-family:inherit}
+a{color:inherit;text-decoration:none}
+.nav{background:var(--navy);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.nav-back{color:rgba(255,255,255,.7);font-size:14px;display:flex;align-items:center;gap:5px;flex:1}
+.nav-title{font-size:15px;font-weight:600;color:#fff;text-align:center;flex:2}
+.nav-spacer{flex:1}
+.screen{display:none;min-height:calc(100vh - 56px)}
+.screen.active{display:block}
+.hero{background:var(--navy);padding:32px 20px;text-align:center}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-title{font-size:clamp(22px,6vw,32px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:8px}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);line-height:1.6}
+.section{padding:24px 20px}
+.opt-grid{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .12s}
+.opt:hover{border-color:var(--navy)}
+.opt.selected{border-color:var(--navy);background:rgba(13,34,68,.03)}
+.opt-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0}
+.opt-text .ot{font-size:15px;font-weight:500}
+.opt-text .os{font-size:13px;color:var(--muted)}
+.check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+.opt.selected .check{background:var(--navy);border-color:var(--navy);color:#fff}
+.q-title{font-size:17px;font-weight:600;margin-bottom:6px}
+.q-sub{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:0 20px 20px}
+.prog-fill{height:100%;background:var(--gold);transition:width .3s}
+.btn-primary{background:var(--navy);color:#fff;font-size:16px;font-weight:600;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none}
+.btn-primary:disabled{opacity:.4}
+.btn-gold{background:var(--gold);color:var(--navy);font-size:16px;font-weight:700;padding:15px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;width:100%;border:none}
+.btn-section{padding:0 20px 32px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.result-bar{background:var(--navy);padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-circle{width:68px;height:68px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.score-num{font-size:20px;font-weight:700;color:var(--gold)}
+.score-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em}
+.result-text .rt{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.result-text .rs{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5}
+.insight-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:0 20px 10px}
+.ic-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ic-icon{font-size:20px;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ic-title{font-size:15px;font-weight:600}
+.ic-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:auto}
+.badge-green{background:var(--success-l);color:var(--success)}
+.badge-yellow{background:var(--warn-l);color:var(--warn)}
+.badge-red{background:var(--danger-l);color:var(--danger)}
+.badge-blue{background:#EFF6FF;color:#1D4ED8}
+.ic-body{font-size:14px;color:var(--muted);line-height:1.6}
+.ic-action{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:13px;font-weight:600;color:var(--navy)}
+.input-field{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:16px;width:100%;color:var(--ink);background:var(--white)}
+.input-field:focus{outline:none;border-color:var(--navy)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;font-weight:500;display:block;margin-bottom:6px;color:var(--ink)}
+.safe{height:40px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-back">← Home</a>
+  <div class="nav-title">Risk Profiling</div>
+  <div class="nav-spacer"></div>
+</nav>
+
+<div class="screen active" id="s-intro">
+  <div class="hero">
+    <div class="hero-tag">Free · 2 minutes</div>
+    <div class="hero-title">What's your real risk tolerance?</div>
+    <div class="hero-sub">6 questions based on real behavioural finance research — not a simple slider.</div>
+  </div>
+  <div class="section">
+    <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px">Most people think they're more aggressive investors than they actually are. Until the market falls 30%.<br><br>This profiler tells you the truth about your risk tolerance — based on how you actually behave, not how you hope you would.</p>
+    <button class="btn-primary" onclick="startQuiz()">Start risk profiling →</button>
+  </div>
+</div>
+
+<div class="screen" id="s-quiz">
+  <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  <div class="section">
+    <div class="q-title" id="q-title"></div>
+    <div class="q-sub" id="q-sub"></div>
+    <div class="opt-grid" id="q-opts"></div>
+  </div>
+  <div class="btn-section">
+    <button class="btn-primary" id="next-btn" onclick="nextQ()" disabled>Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="s-result">
+  <div class="result-bar">
+    <div class="score-circle">
+      <div class="score-num" id="r-label" style="font-size:14px;color:var(--gold)">—</div>
+    </div>
+    <div class="result-text">
+      <div class="rt" id="r-title">Your Risk Profile</div>
+      <div class="rs" id="r-desc">Based on your answers</div>
+    </div>
+  </div>
+  <div style="padding:20px">
+    <div id="r-cards"></div>
+    <div style="margin-top:16px">
+      <button class="btn-gold" onclick="location.href='review.html'">Get my portfolio reviewed →</button>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px">Your IPR will use this risk profile to check alignment with your actual portfolio.</p>
+  </div>
+  <div class="safe"></div>
+</div>
+
+<script>
+const Qs=[
+  {t:"The market falls 25% in 3 months. What do you do?",s:"This is the most revealing question in any risk assessment.",opts:[
+    {e:"😰",l:"Sell everything — I can't watch it fall further",v:1},
+    {e:"😟",l:"Sell some to reduce stress",v:2},
+    {e:"😐",l:"Hold and wait — it'll recover",v:3},
+    {e:"😊",l:"Buy more — this is an opportunity",v:4}
+  ]},
+  {t:"You invest ₹5 lakh. A year later it's worth ₹3.5 lakh. How do you feel?",s:"",opts:[
+    {e:"😡",l:"Devastated — this money was important to me",v:1},
+    {e:"😟",l:"Worried — this is more loss than I expected",v:2},
+    {e:"😐",l:"Uncomfortable but I understand markets",v:3},
+    {e:"🤷",l:"Fine — I expected volatility over 1 year",v:4}
+  ]},
+  {t:"What's your investment time horizon?",s:"When do you actually need most of this money?",opts:[
+    {e:"⏰",l:"Under 2 years — I may need it soon",v:1},
+    {e:"📅",l:"2–5 years",v:2},
+    {e:"🗓️",l:"5–10 years",v:3},
+    {e:"♾️",l:"10+ years — this is long-term wealth",v:4}
+  ]},
+  {t:"What % of your total savings is this investment?",s:"Concentration affects how much risk you can actually afford.",opts:[
+    {e:"💯",l:"Most of my savings (over 70%)",v:1},
+    {e:"📊",l:"About half (40–70%)",v:2},
+    {e:"🌿",l:"A significant portion (20–40%)",v:3},
+    {e:"🌱",l:"A small portion (under 20%)",v:4}
+  ]},
+  {t:"How steady is your income?",s:"Income stability determines how much risk you can absorb.",opts:[
+    {e:"😟",l:"Variable / freelance / business — uncertain months",v:1},
+    {e:"😐",l:"Mostly steady with some variability",v:2},
+    {e:"😊",l:"Salaried — very predictable",v:3},
+    {e:"🏦",l:"Multiple stable income sources",v:4}
+  ]},
+  {t:"Which option would you choose?",s:"A classic risk/reward trade-off.",opts:[
+    {e:"🔒",l:"Guaranteed ₹8,000 return on ₹1 lakh",v:1},
+    {e:"⚖️",l:"60% chance of ₹15,000, 40% chance of ₹3,000",v:2},
+    {e:"📈",l:"50% chance of ₹25,000, 50% chance of ₹0",v:3},
+    {e:"🎯",l:"40% chance of ₹50,000, 60% chance of losing ₹5,000",v:4}
+  ]}
+];
+
+const PROFILES=[
+  {min:6,max:10,label:"Conservative",color:"#1D4ED8",bg:"#EFF6FF",desc:"You prioritise capital safety above returns. Volatility causes you real stress. Your portfolio should be majority fixed income with limited equity.",alloc:"80% Debt / 20% Equity",eg:"FDs, G-Secs, Liquid Funds, Short-term Debt MFs"},
+  {min:11,max:16,label:"Moderate",color:var_warn="var(--warn)",bg:"var(--warn-l)",desc:"You can accept moderate swings for reasonable returns. You won't panic on a 15% correction but 30% would worry you.",alloc:"50% Debt / 50% Equity",eg:"Balanced Advantage Funds, Multi-cap MFs, Some direct equity"},
+  {min:17,max:21,label:"Growth",color:"#059669",bg:"var(--success-l)",desc:"You're comfortable with significant equity exposure. You see market corrections as opportunities, not disasters.",alloc:"25% Debt / 75% Equity",eg:"Flexi-cap MFs, Large + Midcap, Direct equity with diversification"},
+  {min:22,max:24,label:"Aggressive",color:"#7C3AED",bg:"#F5F3FF",desc:"You're fully risk-on. You understand markets deeply and don't lose sleep over volatility. Capital growth is the priority.",alloc:"10% Debt / 90% Equity",eg:"Small + Midcap MFs, Concentrated direct equity, Sectoral funds"}
+];
+
+let cur=0,scores=[],curSel=null;
+
+function startQuiz(){
+  document.getElementById('s-intro').classList.remove('active');
+  document.getElementById('s-quiz').classList.add('active');
+  renderQ(0);
+}
+
+function renderQ(i){
+  const q=Qs[i];
+  document.getElementById('prog').style.width=((i+1)/Qs.length*100)+'%';
+  document.getElementById('q-title').textContent=q.t;
+  document.getElementById('q-sub').textContent=q.s;
+  curSel=null;
+  document.getElementById('next-btn').disabled=true;
+  document.getElementById('q-opts').innerHTML=q.opts.map((o,oi)=>
+    `<div class="opt" onclick="selectOpt(this,${o.v})">
+      <div class="opt-icon">${o.e}</div>
+      <div class="opt-text"><div class="ot">${o.l}</div></div>
+      <div class="check"></div>
+    </div>`
+  ).join('');
+}
+
+function selectOpt(el,v){
+  document.querySelectorAll('#q-opts .opt').forEach(o=>{o.classList.remove('selected');o.querySelector('.check').textContent=''});
+  el.classList.add('selected');
+  el.querySelector('.check').textContent='✓';
+  curSel=v;
+  document.getElementById('next-btn').disabled=false;
+}
+
+function nextQ(){
+  scores.push(curSel);
+  cur++;
+  if(cur>=Qs.length){showResult();}
+  else{renderQ(cur);}
+}
+
+function showResult(){
+  const total=scores.reduce((a,b)=>a+b,0);
+  const profile=PROFILES.find(p=>total>=p.min&&total<=p.max)||PROFILES[1];
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  document.getElementById('r-label').textContent=profile.label;
+  document.getElementById('r-title').textContent=profile.label+' Investor';
+  document.getElementById('r-desc').textContent='Score '+total+'/24 · '+profile.alloc;
+  document.getElementById('r-cards').innerHTML=`
+    <div class="insight-card" style="border-color:${profile.color};margin:0 0 10px">
+      <div class="ic-head">
+        <div class="ic-icon" style="background:${profile.bg}">🎯</div>
+        <div class="ic-title">Your profile: ${profile.label}</div>
+      </div>
+      <div class="ic-body">${profile.desc}</div>
+      <div class="ic-action">Recommended allocation: ${profile.alloc}</div>
+    </div>
+    <div class="insight-card" style="margin:0 0 10px">
+      <div class="ic-head"><div class="ic-icon" style="background:#EFF6FF">💡</div><div class="ic-title">What this means for you</div></div>
+      <div class="ic-body">Suitable instruments: ${profile.eg}</div>
+    </div>
+    <div class="insight-card" style="margin:0;background:var(--gold-l);border-color:rgba(201,150,58,.3)">
+      <div class="ic-head"><div class="ic-icon" style="background:rgba(201,150,58,.2)">📊</div><div class="ic-title">Check your portfolio fits this profile</div></div>
+      <div class="ic-body">Your IPR will compare your actual holdings against this risk profile and flag mismatches — like having 80% equity when your profile says 50%.</div>
+    </div>`;
+}
+</script>
+</body>
+</html>

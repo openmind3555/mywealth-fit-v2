@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="description" content="mywealth.fit — Personal financial guidance from a SEBI-registered advisor. Portfolio review, retirement planning, risk profiling.">
+<title>mywealth.fit — Your money, finally sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d2244;--navy2:#162f5c;--gold:#C9963A;--gold-l:#FDF6E8;--cream:#FAFAF7;--white:#FFFFFF;--ink:#1A1A2E;--muted:#6B7280;--border:#E5E7EB;--success:#15803D;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+
+/* NAV */
+.nav{background:var(--navy);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.logo span{color:var(--gold)}
+.nav-link{font-size:13px;color:rgba(255,255,255,.7);padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15)}
+
+/* HERO */
+.hero{padding:48px 20px 32px;text-align:center;max-width:480px;margin:0 auto}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.hero-headline{font-size:clamp(28px,7vw,42px);font-weight:700;line-height:1.15;letter-spacing:-.5px;margin-bottom:8px}
+.hero-sub{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:clamp(18px,4.5vw,24px);color:var(--muted);margin-bottom:24px;line-height:1.4}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--muted)}
+.sebi-chip{background:rgba(13,34,68,.06);border:1px solid rgba(13,34,68,.12);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--navy)}
+
+/* EMOTION CARDS */
+.emotion-label{font-size:13px;font-weight:500;color:var(--muted);text-align:center;margin:8px 0 16px}
+.emotion-grid{display:flex;flex-direction:column;gap:10px;padding:0 20px 32px;max-width:480px;margin:0 auto}
+.ecard{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:18px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;text-align:left}
+.ecard:hover,.ecard:active{border-color:var(--navy);box-shadow:0 4px 16px rgba(13,34,68,.12);transform:translateY(-1px)}
+.ecard.gold{border-color:var(--gold);background:var(--gold-l)}
+.ecard-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ecard-text .etitle{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.ecard-text .esub{font-size:13px;color:var(--muted);line-height:1.4}
+.ecard-arrow{margin-left:auto;color:var(--muted);flex-shrink:0;font-size:18px}
+
+/* IPR FEATURE STRIP */
+.ipr-strip{background:var(--navy);padding:28px 20px;margin:0}
+.ipr-inner{max-width:480px;margin:0 auto}
+.ipr-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.ipr-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3}
+.ipr-sub{font-size:14px;color:rgba(255,255,255,.65);margin-bottom:20px;line-height:1.6}
+.ipr-btn{background:var(--gold);color:var(--navy);font-size:15px;font-weight:700;padding:14px 24px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.ipr-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.ipr-feat{background:rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.4}
+.ipr-feat span{display:block;font-weight:600;color:#fff;margin-bottom:2px}
+
+/* TOOLS GRID */
+.tools-section{padding:32px 20px;max-width:480px;margin:0 auto}
+.section-label{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .15s}
+.tool-card:hover{border-color:var(--navy);box-shadow:0 2px 10px rgba(13,34,68,.08)}
+.tool-icon{font-size:24px;margin-bottom:8px}
+.tool-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.tool-desc{font-size:12px;color:var(--muted);line-height:1.4}
+.tool-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--gold-l);color:#92690a;display:inline-block;margin-top:6px}
+
+/* TRUST SECTION */
+.trust-section{padding:32px 20px;background:var(--white);border-top:1px solid var(--border)}
+.trust-inner{max-width:480px;margin:0 auto}
+.trust-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.trust-icon{width:36px;height:36px;border-radius:10px;background:rgba(13,34,68,.06);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.trust-text .tt{font-size:14px;font-weight:600;margin-bottom:2px}
+.trust-text .ts{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* FOOTER */
+.footer{background:var(--navy);padding:24px 20px;text-align:center}
+.footer p{font-size:12px;color:rgba(255,255,255,.45);line-height:1.8}
+
+/* CHAT BUTTON */
+.chat-fab{position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(13,34,68,.3);z-index:200;border:none;cursor:pointer;transition:transform .15s}
+.chat-fab:hover{transform:scale(1.08)}
+
+@media(min-width:600px){.emotion-grid,.hero,.tools-section,.trust-inner,.ipr-inner{max-width:540px;margin-left:auto;margin-right:auto}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">my<span>wealth</span>.fit</div>
+  <a href="about.html" class="nav-link">About Sutanu</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">SEBI-Registered Investment Advisor</div>
+  <h1 class="hero-headline">Your money deserves<br>a second opinion.</h1>
+  <p class="hero-sub">What's keeping you up about money?</p>
+  <div class="hero-trust">
+    <span class="sebi-chip">✓ SEBI RIA</span>
+    <span>·</span>
+    <span>Sutanu Bhowmick</span>
+    <span>·</span>
+    <span>15+ years</span>
+  </div>
+</section>
+
+<div class="emotion-label">Pick what resonates with you right now</div>
+
+<div class="emotion-grid">
+  <div class="ecard gold" onclick="location.href='review.html'">
+    <div class="ecard-icon" style="background:rgba(201,150,58,.15)">📊</div>
+    <div class="ecard-text">
+      <div class="etitle">Is my portfolio actually working?</div>
+      <div class="esub">Get an honest review with your real holdings — not generic advice.</div>
+    </div>
+    <div class="ecard-arrow">›</div>
+  </div>
+  <div class="ecard" onclick="location.href='retire.html'">
+    <div class="ecard-icon" style="background:#EFF6FF">🏖️</div>
+    <div class="ecard-text">
+      <div class="etitle">Will I ever be able to retire?</div>
+      <div class="esub">Test your retirement plan with real numbers. Know the gap.</div>
+    </div>
+    <div class="ecard-arrow">›</div>
+  </div>
+  <div class="ecard" onclick="location.href='risk.html'">
+    <div class="ecard-icon" style="background:#F0FDF4">🎯</div>
+    <div class="ecard-text">
+      <div class="etitle">Am I taking too much risk?</div>
+      <div class="esub">6 questions that reveal your true risk profile in 2 minutes.</div>
+    </div>
+    <div class="ecard-arrow">›</div>
+  </div>
+  <div class="ecard" onclick="location.href='picks.html'">
+    <div class="ecard-icon" style="background:#FFF7ED">⭐</div>
+    <div class="ecard-text">
+      <div class="etitle">Where should I put money now?</div>
+      <div class="esub">Sutanu's curated stock and MF picks with reasoning.</div>
+    </div>
+    <div class="ecard-arrow">›</div>
+  </div>
+  <div class="ecard" onclick="location.href='chat.html'">
+    <div class="ecard-icon" style="background:#F5F3FF">💬</div>
+    <div class="ecard-text">
+      <div class="etitle">I just have a question</div>
+      <div class="esub">Ask anything about your money. No judgment, no sales pitch.</div>
+    </div>
+    <div class="ecard-arrow">›</div>
+  </div>
+</div>
+
+<section class="ipr-strip">
+  <div class="ipr-inner">
+    <div class="ipr-tag">Signature Tool · Investment Portfolio Review</div>
+    <div class="ipr-title">The IPR — India's most thorough portfolio health check</div>
+    <div class="ipr-sub">Upload your holdings. Get a complete analysis built on your actual data, the latest macro, and Sutanu's research — not an algorithm's guess.</div>
+    <button class="ipr-btn" onclick="location.href='review.html'">
+      Get my portfolio reviewed <span>→</span>
+    </button>
+    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.45);margin-top:10px">🎉 Launch offer ₹999 until Sep 30 · Regular price ₹1,999 from Oct 1</div>
+    <div class="ipr-features">
+      <div class="ipr-feat"><span>Concentration risk</span>Where you're dangerously overexposed</div>
+      <div class="ipr-feat"><span>Risk fit check</span>vs your actual risk profile</div>
+      <div class="ipr-feat"><span>Emergency fund</span>Gap vs what you actually need</div>
+      <div class="ipr-feat"><span>Macro alignment</span>vs current India macro environment</div>
+      <div class="ipr-feat"><span>Rebalancing ideas</span>What to move and why</div>
+      <div class="ipr-feat"><span>MF watchlist</span>5-year performance comparison</div>
+    </div>
+  </div>
+</section>
+
+<section class="tools-section">
+  <div class="section-label">Quick tools — free</div>
+  <div class="tools-grid">
+    <div class="tool-card" onclick="location.href='risk.html'">
+      <div class="tool-icon">🎯</div>
+      <div class="tool-name">Risk Profiling</div>
+      <div class="tool-desc">Know your true risk tolerance in 2 min</div>
+      <div class="tool-badge">Free · 2 min</div>
+    </div>
+    <div class="tool-card" onclick="location.href='retire.html'">
+      <div class="tool-icon">🏖️</div>
+      <div class="tool-name">Retirement Test</div>
+      <div class="tool-desc">Will your savings last? Find out now.</div>
+      <div class="tool-badge">Free · 1 min</div>
+    </div>
+    <div class="tool-card" onclick="location.href='picks.html'">
+      <div class="tool-icon">⭐</div>
+      <div class="tool-name">Stock of Week</div>
+      <div class="tool-desc">Sutanu's pick with full thesis</div>
+      <div class="tool-badge">Updated weekly</div>
+    </div>
+    <div class="tool-card" onclick="location.href='chat.html'">
+      <div class="tool-icon">💬</div>
+      <div class="tool-name">Ask Anything</div>
+      <div class="tool-desc">AI-powered answers, advisor reviewed</div>
+      <div class="tool-badge">Free · Instant</div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-section">
+  <div class="trust-inner">
+    <div class="section-label" style="margin-bottom:20px">Why trust mywealth.fit?</div>
+    <div class="trust-row">
+      <div class="trust-icon">🏛️</div>
+      <div class="trust-text">
+        <div class="tt">SEBI-Registered Investment Advisor</div>
+        <div class="ts">Regulated, accountable, fiduciary. Not a product distributor. No commissions. Ever.</div>
+      </div>
+    </div>
+    <div class="trust-row">
+      <div class="trust-icon">🧠</div>
+      <div class="trust-text">
+        <div class="tt">15+ years of real portfolio management</div>
+        <div class="ts">Sutanu has managed portfolios through 2008, COVID, and the 2025 Iran crisis. Not textbook theory.</div>
+      </div>
+    </div>
+    <div class="trust-row">
+      <div class="trust-icon">📱</div>
+      <div class="trust-text">
+        <div class="tt">Built for real people, not institutions</div>
+        <div class="ts">Salaried professionals. Business owners. People with 25L to 10Cr who deserve the same quality as HNI clients.</div>
+      </div>
+    </div>
+    <div class="trust-row" style="margin-bottom:0">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-text">
+        <div class="tt">Your data stays yours</div>
+        <div class="ts">Nothing sold. Nothing shared. Your portfolio data is used only to generate your review.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p><b style="color:rgba(255,255,255,.8)">mywealth.fit</b> · Sutanu Bhowmick · SEBI Registered Investment Advisor<br>
+  openmind3555@gmail.com · This platform is for educational and advisory purposes only.<br>
+  Investments are subject to market risk. Please read all documents carefully.</p>
+</footer>
+
+<button class="chat-fab" onclick="location.href='chat.html'" title="Ask anything">💬</button>
+
+</body>
+</html>
