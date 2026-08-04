@@ -168,6 +168,37 @@ a{color:inherit;text-decoration:none}
   <button class="btn-gold" onclick="location.href='review.html'">Get your portfolio reviewed →</button>
 </div>
 
+
+<!-- EXIT INTENT POPUP — shows after 120 seconds or on page leave -->
+<div id="exit-popup" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;padding:0 0 env(safe-area-inset-bottom,0)">
+  <div style="background:#fff;border-top:1px solid #E5E7EB;border-radius:16px 16px 0 0;padding:20px 20px 24px;box-shadow:0 -4px 24px rgba(13,34,68,.12);max-width:480px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div style="font-size:16px;font-weight:700;color:#0d2244;line-height:1.3">Exploring your options?</div>
+      <button onclick="closePopup()" style="background:none;border:none;font-size:20px;color:#9CA3AF;cursor:pointer;padding:0;margin-left:12px">×</button>
+    </div>
+    <div style="font-size:14px;color:#6B7280;margin-bottom:14px;line-height:1.6">If you have a question about your money — just write to Sutanu. No pitch, no spam. A real person replies.</div>
+    <a href="mailto:openmind3555@gmail.com?subject=mywealth.fit%20enquiry" style="background:#0d2244;color:#fff;font-size:15px;font-weight:600;padding:13px 20px;border-radius:10px;display:block;text-align:center;margin-bottom:8px">Write to Sutanu →</a>
+    <button onclick="closePopup()" style="background:none;border:none;width:100%;font-size:13px;color:#9CA3AF;cursor:pointer;padding:6px">Maybe later</button>
+  </div>
+</div>
+<script>
+(function(){
+  const POPUP_KEY='mwf_popup_shown';
+  if(sessionStorage.getItem(POPUP_KEY)) return;
+  function show(){
+    if(sessionStorage.getItem(POPUP_KEY)) return;
+    document.getElementById('exit-popup').style.display='block';
+    sessionStorage.setItem(POPUP_KEY,'1');
+  }
+  // Show after 120 seconds
+  setTimeout(show, 120000);
+  // Show on desktop when mouse leaves toward top (tab bar / close)
+  document.addEventListener('mouseleave', function(e){
+    if(e.clientY < 20) show();
+  });
+})();
+function closePopup(){document.getElementById('exit-popup').style.display='none';}
+</script>
 <div style="padding:16px 20px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--border);line-height:1.8">
   Experienced Investor · MF Distributor · mywealth.fit · Sutanu Bhowmick<br>
   This platform is for educational and advisory purposes only. Investments are subject to market risk.

@@ -648,9 +648,13 @@ function generateResult(holdings) {
   const score = Math.min(85, Math.max(45, 60 + Math.floor(Math.random()*20)));
   document.getElementById('r-score').textContent = score;
   document.getElementById('r-holdings').textContent = holdings.length + ' holdings';
-  const emgNeeded = Math.round(totalVal * 0.15 / 50000) * 50000;
+  // Emergency fund: assume monthly expenses = portfolio value * 2% as a proxy
+  // Minimum recommendation: 3 lakhs, typical: 6 months of estimated expenses
+  const estMonthlyExp = Math.max(30000, totalVal * 0.02);
+  const emgNeeded = Math.max(300000, Math.round(estMonthlyExp * 6 / 50000) * 50000);
+  const emgLakh = (emgNeeded / 100000).toFixed(1);
   document.getElementById('emg-text').textContent =
-    'Your portfolio shows ₹' + (totalVal/100000).toFixed(1) + ' lakh invested but limited liquid assets detected. You need approximately ₹' + (emgNeeded/100000).toFixed(1) + ' lakh in a liquid fund or savings account (6 months of expenses) as an emergency fund. This is the single most important action before any rebalancing.';
+    'Your portfolio shows ₹' + (totalVal/100000).toFixed(1) + ' lakh invested. Based on your portfolio size, we estimate you need approximately ₹' + emgLakh + ' lakh in a liquid fund or savings account as a 6-month emergency buffer. This should be your first priority before any portfolio rebalancing.';
 }
 
 // Drag and drop

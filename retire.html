@@ -110,12 +110,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
     <div class="range-wrap">
       <label>Current savings invested (₹)</label>
       <div class="range-val" id="v-save">₹25 lakh</div>
-      <input type="range" min="0" max="10000000" step="100000" value="2500000" oninput="document.getElementById('v-save').textContent='₹'+(this.value/100000).toFixed(0)+' lakh';calc()">
+      <input type="range" min="0" max="100000000" step="500000" value="2500000" oninput="document.getElementById('v-save').textContent=this.value>=10000000?'₹'+(this.value/10000000).toFixed(1)+' Cr':'₹'+(this.value/100000).toFixed(0)+' lakh';calc()">
     </div>
     <div class="range-wrap">
       <label>Monthly SIP / investment (₹)</label>
       <div class="range-val" id="v-sip">₹20,000</div>
-      <input type="range" min="0" max="200000" step="2500" value="20000" oninput="document.getElementById('v-sip').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
+      <input type="range" min="0" max="500000" step="5000" value="20000" oninput="document.getElementById('v-sip').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
     </div>
   </div>
 

@@ -188,9 +188,28 @@ async function sendMsg() {
     });
     const data = await res.json();
     typingEl.remove();
-    const reply = data.content?.[0]?.text || data.reply || data.error || 'Something went wrong. Please try again.';
-    addMsg('assistant', reply);
-    msgs.push({role:'assistant', content:reply});
+    // Handle both structured (new) and plain (fallback) responses
+    let replyText = '';
+    if (data.structured && data.data) {
+      const d = data.data;
+      replyText = d.headline || '';
+      if (d.summary) replyText += '\n\n' + d.summary;
+      if (d.cards && d.cards.length) {
+        d.cards.forEach(card => {
+          if (card.type === 'stat') replyText += '\n\n' + card.label + ': ' + card.value + (card.sublabel ? ' (' + card.sublabel + ')' : '');
+          if (card.type === 'steps' && card.steps) replyText += '\n\n' + card.label + ':\n' + card.steps.map((s,i) => (i+1)+'. '+s).join('\n');
+          if (card.type === 'insight') replyText += '\n\n' + card.label + ': ' + card.text + (card.law ? ' [' + card.law + ']' : '');
+        });
+      }
+      if (d.action) replyText += '\n\n→ ' + d.action;
+      if (d.upsell && d.upsell.show && d.upsell.product) {
+        replyText += '\n\n💡 ' + d.upsell.hook + ' → mywealth.fit/' + d.upsell.product;
+      }
+    } else {
+      replyText = data.reply || data.error || 'Something went wrong. Please try again.';
+    }
+    addMsg('assistant', replyText);
+    msgs.push({role:'assistant', content:replyText});
   } catch(e) {
     typingEl.remove();
     addMsg('assistant', 'Sorry, I'm having trouble connecting. Please try again or email openmind3555@gmail.com');

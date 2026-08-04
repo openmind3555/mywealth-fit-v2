@@ -230,6 +230,67 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none}
   </div>
 </section>
 
+
+<!-- CONTACT FORM — uses existing Formspree account -->
+<div style="padding:0 20px 32px;max-width:480px;margin:0 auto">
+  <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px">Get in touch</div>
+  <form id="contact-form" action="https://formspree.io/f/mbdpaykn" method="POST" onsubmit="submitForm(event)">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <input name="name" placeholder="Your name" required style="border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;outline:none">
+      <input name="email" type="email" placeholder="Your email" required style="border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;outline:none">
+      <input name="phone" placeholder="Phone (optional)" style="border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;outline:none">
+      <textarea name="message" placeholder="What would you like help with?" rows="3" required style="border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;outline:none;resize:vertical"></textarea>
+      <button type="submit" style="background:var(--navy);color:#fff;font-size:16px;font-weight:600;padding:14px 24px;border-radius:10px;border:none;cursor:pointer">Send message →</button>
+    </div>
+    <div id="form-success" style="display:none;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:14px;color:#15803D">✓ Message sent! Sutanu will reply within 24 hours.</div>
+    <div id="form-error" style="display:none;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:14px;color:#DC2626">Something went wrong. Email openmind3555@gmail.com directly.</div>
+  </form>
+</div>
+<script>
+async function submitForm(e){
+  e.preventDefault();
+  const form=e.target;
+  const btn=form.querySelector('button');
+  btn.textContent='Sending...';btn.disabled=true;
+  try{
+    const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
+    if(res.ok){document.getElementById('form-success').style.display='block';form.reset();}
+    else{document.getElementById('form-error').style.display='block';}
+  }catch{document.getElementById('form-error').style.display='block';}
+  btn.textContent='Send message →';btn.disabled=false;
+}
+</script>
+
+<!-- EXIT INTENT POPUP — shows after 120 seconds or on page leave -->
+<div id="exit-popup" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;padding:0 0 env(safe-area-inset-bottom,0)">
+  <div style="background:#fff;border-top:1px solid #E5E7EB;border-radius:16px 16px 0 0;padding:20px 20px 24px;box-shadow:0 -4px 24px rgba(13,34,68,.12);max-width:480px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div style="font-size:16px;font-weight:700;color:#0d2244;line-height:1.3">Exploring your options?</div>
+      <button onclick="closePopup()" style="background:none;border:none;font-size:20px;color:#9CA3AF;cursor:pointer;padding:0;margin-left:12px">×</button>
+    </div>
+    <div style="font-size:14px;color:#6B7280;margin-bottom:14px;line-height:1.6">If you have a question about your money — just write to Sutanu. No pitch, no spam. A real person replies.</div>
+    <a href="mailto:openmind3555@gmail.com?subject=mywealth.fit%20enquiry" style="background:#0d2244;color:#fff;font-size:15px;font-weight:600;padding:13px 20px;border-radius:10px;display:block;text-align:center;margin-bottom:8px">Write to Sutanu →</a>
+    <button onclick="closePopup()" style="background:none;border:none;width:100%;font-size:13px;color:#9CA3AF;cursor:pointer;padding:6px">Maybe later</button>
+  </div>
+</div>
+<script>
+(function(){
+  const POPUP_KEY='mwf_popup_shown';
+  if(sessionStorage.getItem(POPUP_KEY)) return;
+  function show(){
+    if(sessionStorage.getItem(POPUP_KEY)) return;
+    document.getElementById('exit-popup').style.display='block';
+    sessionStorage.setItem(POPUP_KEY,'1');
+  }
+  // Show after 120 seconds
+  setTimeout(show, 120000);
+  // Show on desktop when mouse leaves toward top (tab bar / close)
+  document.addEventListener('mouseleave', function(e){
+    if(e.clientY < 20) show();
+  });
+})();
+function closePopup(){document.getElementById('exit-popup').style.display='none';}
+</script>
 <footer class="footer">
   <p><b style="color:rgba(255,255,255,.8)">mywealth.fit</b> · Sutanu Bhowmick · Experienced Investor · MF Distributor<br>
   openmind3555@gmail.com · This platform is for educational and advisory purposes only.<br>
