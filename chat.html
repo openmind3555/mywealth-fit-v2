@@ -103,11 +103,11 @@ body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidd
 <div class="chat-wrap">
   <div class="chat-hero">
     <div class="chat-hero-title">mywealth.fit AI</div>
-    <div class="chat-hero-sub">SEBI RIA-guided · India-focused · No sales pitch</div>
+    <div class="chat-hero-sub">India-focused · Advisor-guided · India-focused · No sales pitch</div>
   </div>
 
   <div class="msgs" id="msgs">
-    <div class="msg ai">👋 Hi! I'm the mywealth.fit assistant — built on Sutanu Bhowmick's 15 years of investment experience as a SEBI-registered advisor.<br><br>Ask me anything about your money — no judgment, no sales pitch.</div>
+    <div class="msg ai">👋 Hi! I'm the mywealth.fit assistant — built on Sutanu Bhowmick's 15 years of investment experience as a experienced investor.<br><br>Ask me anything about your money — no judgment, no sales pitch.</div>
   </div>
 
   <div class="chips-row" id="chips">
@@ -130,19 +130,19 @@ body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidd
 </div>
 
 <script>
-const SYSTEM = `You are a financial assistant for mywealth.fit, created by SEBI-registered investment advisor Sutanu Bhowmick. You help Indian investors with practical, honest financial guidance.
+const SYSTEM = `You are a financial assistant for mywealth.fit, created by experienced investor and MF distributor Sutanu Bhowmick. You help Indian investors with practical, honest financial guidance.
 
 RULES:
-- Always focus on India — Indian markets, SEBI regulations, Indian tax laws, Indian investment instruments
+- Always focus on India — Indian markets,  regulations, Indian tax laws, Indian investment instruments
 - Be concise — mobile users need short, clear answers
 - Never recommend specific stocks as "buy now" — give educational context instead
 - Always suggest consulting Sutanu for personalised advice on major decisions
 - For portfolio reviews, direct users to mywealth.fit/review.html
 - Be warm and human — not a robot, not a salesperson
 - Keep responses under 150 words unless the question requires detail
-- SEBI disclaimer: remind users this is educational, not personalised advice, for complex questions`;
+-  disclaimer: remind users this is educational, not personalised advice, for complex questions`;
 
-let msgs = [{role:'assistant', content:"👋 Hi! I'm the mywealth.fit assistant — built on Sutanu Bhowmick's 15 years of investment experience as a SEBI-registered advisor.\n\nAsk me anything about your money — no judgment, no sales pitch."}];
+let msgs = [{role:'assistant', content:"👋 Hi! I'm the mywealth.fit assistant — built on Sutanu Bhowmick's 15 years of investment experience as a experienced investor.\n\nAsk me anything about your money — no judgment, no sales pitch."}];
 let busy = false;
 
 function addMsg(role, text) {
