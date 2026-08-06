@@ -130,27 +130,50 @@ body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidd
 </div>
 
 <script>
-const SYSTEM = `You are a knowledgeable financial assistant at mywealth.fit, Bangalore.
-You are built on the expertise of Sutanu Bhowmick — 15 years in Indian equity markets, European banking background, NISM XA & XB certified, AMFI registered MF distributor.
+const SYSTEM = `You are the mywealth.fit AI — built on Sutanu Bhowmick's 15 years of Indian equity investing experience. Sutanu is based in Bangalore, is NISM XA and XB certified, AMFI registered MF distributor, and manages a Rs 20 crore personal portfolio with 15%+ annual returns after tax.
 
-You help Indian investors with practical, honest financial guidance.
+CRITICAL RULE: When a user's question is better answered by a tool on this site, DO NOT try to answer it in chat. Instead respond with a tool card.
 
-KEY RULES:
-- Focus on India — Indian markets, tax laws, regulations, investment instruments
-- Be concise — mobile users need short clear answers  
-- Always cite source for any tax claim (e.g. Section 112A, Finance Act 2024)
-- If uncertain, say "verify with a CA"
-- Never say "buy this stock now" without caveats
-- Suggest /review for portfolio analysis, /risk for risk profiling, /retire for retirement planning
-- Keep responses under 200 words unless detail is genuinely needed
+TOOLS AVAILABLE:
+- risk_profiler → /risk (6-question interactive quiz, instant result)
+- portfolio_review → /review (upload holdings, get full IPR)
+- retirement_calc → /retire (sliders, instant calculation)
+- picks → /picks (Sutanu's current stock and MF picks)
+
+WHEN TO ROUTE (respond with tool card, not a full answer):
+- "is my portfolio risky / too aggressive / balanced" → risk_profiler
+- "should I invest in X / where to invest" → risk_profiler first
+- "review my portfolio / check my holdings / analyse my stocks" → portfolio_review
+- "will I retire comfortably / retirement corpus / how much for retirement" → retirement_calc
+- "what stock to buy / MF recommendation / current picks" → picks
+- "/risk or /review or /retire or /picks" → route to that tool immediately
+
+WHEN TO ANSWER IN CHAT (specific factual questions):
+- Tax questions (LTCG, STCG, EPF, NPS, old vs new regime)
+- "What is X" definitional questions
+- Short factual queries about Indian investing concepts
 
 VERIFIED TAX RULES (FY2025-26):
-- LTCG on equity/equity MF: 0% up to ₹1.25L/year, 12.5% above that (Section 112A, Finance Act 2024), holding 12+ months
-- STCG on equity/equity MF: 20% (Section 111A), holding under 12 months
-- EPF withdrawal 5+ years service: fully tax free (Section 10(12) IT Act)
-- New tax regime: 0% up to ₹4L, 5% ₹4-8L, 10% ₹8-12L, 15% ₹12-16L, 20% ₹16-20L, 25% ₹20-24L, 30% above ₹24L
-- Section 87A rebate of ₹60,000 does NOT apply to STCG or LTCG from equity — only on slab-rate income
-- Foreign company RSU/ESOP: treated as unlisted under Indian law, STCG at slab rate under 24 months`;
+- LTCG on equity/equity MF: 0% up to Rs 1.25L/year, 12.5% above (Section 112A, Finance Act 2024), 12+ months holding
+- STCG on equity/equity MF: 20% (Section 111A), under 12 months
+- EPF withdrawal 5+ years continuous service: FULLY TAX FREE (Section 10(12) IT Act)
+- New tax regime: 0% up to Rs 4L, 5% Rs 4-8L, 10% Rs 8-12L, 15% Rs 12-16L, 20% Rs 16-20L, 25% Rs 20-24L, 30% above Rs 24L
+- Section 87A rebate of Rs 60,000 does NOT apply to STCG (111A) or LTCG (112A) — only slab-rate income
+- Foreign company RSU/ESOP: unlisted under Indian law, STCG at slab rate under 24 months, LTCG 12.5% over 24 months
+- NPS: 80CCD(1B) Rs 50,000 extra deduction (old regime). 60% lump sum tax free at retirement.
+- PPF: EEE status. 7.1% interest. 15-year lock-in.
+
+RESPONSE FORMAT — respond ONLY with this JSON, no text before or after:
+{
+  "type": "answer|tool",
+  "tool": "risk|review|retire|picks|null",
+  "tool_label": "Open Risk Profiler|Review My Portfolio|Retirement Calculator|View Picks|null",
+  "tool_desc": "One sentence on what the tool will do for them",
+  "headline": "Short headline (if type=answer)",
+  "summary": "2-3 sentences plain explanation (if type=answer)",
+  "action": "One specific next step",
+  "cards": []
+}`;
 
 let msgs = [{role:'assistant', content:"👋 Hi! I am the mywealth.fit assistant — backed by Sutanu Bhowmick's 15 years of investing experience in Indian markets.\n\nAsk me anything about your money. No judgment, no sales pitch."}];
 let busy = false;
@@ -221,40 +244,41 @@ async function sendMsg() {
     const data = await res.json();
     let replyText = '';
 
-    if (data.structured && data.data) {
-      const d = data.data;
-      if (d.headline) replyText += d.headline;
-      if (d.summary) replyText += '\n\n' + d.summary;
-      if (d.cards && d.cards.length) {
-        d.cards.forEach(card => {
-          if (card.type === 'stat' && card.label) {
-            replyText += '\n\n' + card.label + ': ' + (card.value||'');
-            if (card.sublabel) replyText += ' — ' + card.sublabel;
-          }
-          if (card.type === 'steps' && card.steps) {
-            replyText += '\n\n' + (card.label||'Steps') + ':';
-            card.steps.forEach((s,i) => { replyText += '\n' + (i+1) + '. ' + s; });
-          }
-          if (card.type === 'insight' && card.text) {
-            replyText += '\n\n' + (card.label ? card.label + ': ' : '') + card.text;
-            if (card.law) replyText += ' [' + card.law + ']';
-          }
-        });
-      }
-      if (d.action) replyText += '\n\n→ ' + d.action;
-      if (d.upsell && d.upsell.show && d.upsell.hook) {
-        replyText += '\n\n💡 ' + d.upsell.hook;
-      }
-    } else if (data.reply) {
-      replyText = data.reply;
-    } else if (data.error) {
-      replyText = 'Sorry — ' + data.error + '. Try emailing openmind3555@gmail.com';
-    } else {
-      replyText = 'Something went wrong. Please try again.';
-    }
+    // Parse and render response
+    let parsedResp = null;
+    if (data.structured && data.data) parsedResp = data.data;
+    else if (data.reply) { try { parsedResp = JSON.parse(data.reply); } catch(e){} }
 
-    addMsg('assistant', replyText.trim());
-    msgs.push({role:'assistant', content:replyText.trim()});
+    if (parsedResp && parsedResp.type === 'tool' && parsedResp.tool && parsedResp.tool !== 'null') {
+      // Tool card with navigation button
+      const toolDiv = document.createElement('div');
+      toolDiv.className = 'msg ai';
+      toolDiv.style.cssText = 'padding:0;overflow:hidden;max-width:88%';
+      toolDiv.innerHTML =
+        '<div style="padding:14px 15px">' +
+        '<div style="font-size:14px;font-weight:500;color:#1A1A2E;margin-bottom:6px">' + (parsedResp.headline || 'I have the right tool for this') + '</div>' +
+        '<div style="font-size:13px;color:#6B7280;margin-bottom:12px;line-height:1.5">' + (parsedResp.tool_desc || '') + '</div>' +
+        '<a href="' + parsedResp.tool + '.html" style="background:#0d2244;color:#fff;font-size:14px;font-weight:600;padding:11px 16px;border-radius:8px;display:block;text-align:center;text-decoration:none">' +
+        (parsedResp.tool_label || 'Open tool') + ' →</a>' +
+        (parsedResp.action ? '<div style="font-size:12px;color:#9CA3AF;margin-top:8px;text-align:center">' + parsedResp.action + '</div>' : '') +
+        '</div>';
+      document.getElementById('msgs').appendChild(toolDiv);
+      toolDiv.scrollIntoView({behavior:'smooth',block:'end'});
+      msgs.push({role:'assistant', content: parsedResp.tool_label || 'Tool suggested'});
+    } else {
+      // Text answer
+      if (parsedResp) {
+        if (parsedResp.headline) replyText += parsedResp.headline;
+        if (parsedResp.summary) replyText += '\n\n' + parsedResp.summary;
+        if (parsedResp.action) replyText += '\n\n→ ' + parsedResp.action;
+      } else if (data.reply) {
+        replyText = data.reply;
+      } else if (data.error) {
+        replyText = 'Error: ' + data.error + '. Email openmind3555@gmail.com';
+      }
+      addMsg('assistant', replyText.trim() || 'Something went wrong. Please try again.');
+      msgs.push({role:'assistant', content: replyText.trim()});
+    }
 
   } catch(err) {
     typingEl.remove();
