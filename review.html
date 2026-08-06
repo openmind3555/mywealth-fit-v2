@@ -210,7 +210,7 @@ input{font-family:inherit}
 
   <div class="intro-sample-card">
     <div class="isc-header">
-      <span>Sample IPR output — Ravi, 38, Software Engineer</span>
+      <span>Sample IPR output — Mid-career professional, ₹18L portfolio</span>
       <div class="isc-score">67</div>
     </div>
     <div class="isc-body">
@@ -504,8 +504,8 @@ input{font-family:inherit}
         <div class="ic-title">Concentration Risk</div>
         <div class="ic-badge badge-red">High Risk</div>
       </div>
-      <div class="ic-body" id="conc-text">Your equity portfolio is 71% in IT sector stocks (TCS, Infosys, Wipro). A single-sector event — like the 2025 Accenture fear — could impact 70%+ of your equity value simultaneously.</div>
-      <div class="ic-action" id="conc-action">→ Reduce IT to 40% max. Add 3 non-IT names over 6 months.</div>
+      <div class="ic-body" id="conc-text">Analysing your portfolio concentration...</div>
+      <div class="ic-action" id="conc-action">→ Detailed analysis below</div>
     </div>
 
     <div class="insight-card">
@@ -525,7 +525,7 @@ input{font-family:inherit}
         <div class="ic-badge badge-yellow">2 funds lagging</div>
       </div>
       <div class="ic-body">2 of your 4 mutual funds have underperformed their benchmark over the last 3 years. This matters because you're paying 1-1.5% expense ratio annually on underperforming funds.</div>
-      <div class="ic-action">→ Switch to outperforming alternatives. Watchlist below.</div>
+      <div class="ic-action">→ Switch to better-performing alternatives. Sutanu will recommend specific funds in your IPR email.</div>
     </div>
 
     <div class="insight-card">
@@ -644,17 +644,39 @@ function parseCSV(text) {
 }
 
 function generateResult(holdings) {
-  const totalVal = holdings.reduce((s,h) => s+h.val, 0);
-  const score = Math.min(85, Math.max(45, 60 + Math.floor(Math.random()*20)));
+  const totalVal = holdings.reduce((s,h) => s + (h.val || 0), 0);
+  const totalQty = holdings.length;
+
+  // Portfolio health score
+  const diversityScore = Math.min(30, totalQty * 3);
+  const sizeScore = Math.min(40, Math.round(totalVal / 100000) * 2);
+  const score = Math.min(85, Math.max(35, diversityScore + sizeScore + 15));
   document.getElementById('r-score').textContent = score;
-  document.getElementById('r-holdings').textContent = holdings.length + ' holdings';
-  // Emergency fund: assume monthly expenses = portfolio value * 2% as a proxy
-  // Minimum recommendation: 3 lakhs, typical: 6 months of estimated expenses
+  document.getElementById('r-holdings').textContent = totalQty + ' holdings · Rs ' + (totalVal/100000).toFixed(1) + ' lakh total';
+
+  // Emergency fund
   const estMonthlyExp = Math.max(30000, totalVal * 0.02);
   const emgNeeded = Math.max(300000, Math.round(estMonthlyExp * 6 / 50000) * 50000);
-  const emgLakh = (emgNeeded / 100000).toFixed(1);
   document.getElementById('emg-text').textContent =
-    'Your portfolio shows ₹' + (totalVal/100000).toFixed(1) + ' lakh invested. Based on your portfolio size, we estimate you need approximately ₹' + emgLakh + ' lakh in a liquid fund or savings account as a 6-month emergency buffer. This should be your first priority before any portfolio rebalancing.';
+    'Your portfolio shows Rs ' + (totalVal/100000).toFixed(1) + ' lakh invested across ' + totalQty + ' holdings. We estimate you need approximately Rs ' + (emgNeeded/100000).toFixed(1) + ' lakh in a liquid fund or savings account as a 6-month emergency buffer. This should be your first priority before any rebalancing.';
+
+  // Concentration from actual data
+  const sorted = [...holdings].sort((a,b) => (b.val||0)-(a.val||0));
+  const top3 = sorted.slice(0,3).map(h => h.name || h.ticker || 'Unknown').join(', ');
+  const topVal = sorted.slice(0,3).reduce((s,h) => s+(h.val||0), 0);
+  const topPct = totalVal > 0 ? Math.round(topVal / totalVal * 100) : 0;
+  document.getElementById('conc-text').textContent =
+    'Your top 3 holdings (' + top3 + ') represent ' + topPct + '% of your total portfolio value. ' +
+    (topPct > 60 ? 'This is high concentration. A single bad quarter in any of these significantly impacts your overall returns.' :
+     topPct > 40 ? 'Moderate concentration — acceptable but monitor closely.' :
+     'Good diversification across top holdings.');
+  document.getElementById('conc-action').textContent =
+    topPct > 60 ? '→ Consider reducing top 3 positions to below 50% over 6 months.' :
+    '→ Concentration looks reasonable. Sutanu will review sector spread in your full IPR.';
+
+  // Risk analysis note
+  const el = document.getElementById('risk-text');
+  if (el) el.textContent = 'Your portfolio has ' + totalQty + ' positions worth Rs ' + (totalVal/100000).toFixed(1) + ' lakh. Sutanu will review sector concentration, risk profile alignment, and rebalancing opportunities in your personalised IPR within 24 hours.';
 }
 
 // Drag and drop

@@ -95,27 +95,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
     <div class="range-wrap">
       <label>Current age</label>
       <div class="range-val" id="v-age">35</div>
-      <input type="range" min="22" max="65" value="35" oninput="document.getElementById('v-age').textContent=this.value;calc()">
+      <input type="range" id="r-age" min="22" max="65" value="35" oninput="document.getElementById('v-age').textContent=this.value;calc()">
     </div>
     <div class="range-wrap">
       <label>I want to retire at age</label>
       <div class="range-val" id="v-retire">60</div>
-      <input type="range" min="40" max="75" value="60" oninput="document.getElementById('v-retire').textContent=this.value;calc()">
+      <input type="range" id="r-retire" min="40" max="75" value="60" oninput="document.getElementById('v-retire').textContent=this.value;calc()">
     </div>
     <div class="range-wrap">
       <label>Current monthly expenses (₹)</label>
       <div class="range-val" id="v-exp">₹80,000</div>
-      <input type="range" min="20000" max="500000" step="5000" value="80000" oninput="document.getElementById('v-exp').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
+      <input type="range" id="r-exp" min="20000" max="500000" step="5000" value="80000" oninput="document.getElementById('v-exp').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
     </div>
     <div class="range-wrap">
       <label>Current savings invested (₹)</label>
       <div class="range-val" id="v-save">₹25 lakh</div>
-      <input type="range" min="0" max="100000000" step="500000" value="2500000" oninput="document.getElementById('v-save').textContent=this.value>=10000000?'₹'+(this.value/10000000).toFixed(1)+' Cr':'₹'+(this.value/100000).toFixed(0)+' lakh';calc()">
+      <input type="range" id="r-save" min="0" max="100000000" step="500000" value="2500000" oninput="document.getElementById('v-save').textContent=this.value>=10000000?'₹'+(this.value/10000000).toFixed(1)+' Cr':'₹'+(this.value/100000).toFixed(0)+' lakh';calc()">
     </div>
     <div class="range-wrap">
       <label>Monthly SIP / investment (₹)</label>
       <div class="range-val" id="v-sip">₹20,000</div>
-      <input type="range" min="0" max="500000" step="5000" value="20000" oninput="document.getElementById('v-sip').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
+      <input type="range" id="r-sip" min="0" max="500000" step="5000" value="20000" oninput="document.getElementById('v-sip').textContent='₹'+Number(this.value).toLocaleString('en-IN');calc()">
     </div>
   </div>
 
@@ -148,11 +148,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 
 <script>
 function calc(){
-  const age=+document.querySelector('input[min="22"]').value;
-  const retireAge=+document.querySelector('input[min="40"]').value;
-  const monthlyExp=+document.querySelector('input[step="5000"]').value;
-  const currentSave=+document.querySelector('input[step="100000"]').value;
-  const monthlySIP=+document.querySelector('input[step="2500"]').value;
+  const age=+(document.getElementById('r-age')||{value:35}).value;
+  const retireAge=+(document.getElementById('r-retire')||{value:60}).value;
+  const monthlyExp=+(document.getElementById('r-exp')||{value:80000}).value;
+  const currentSave=+(document.getElementById('r-save')||{value:2500000}).value;
+  const monthlySIP=+(document.getElementById('r-sip')||{value:20000}).value;
   const years=Math.max(1,retireAge-age);
   const inflation=0.06,returns=0.12,r=returns/12;
   const inflatedExp=monthlyExp*Math.pow(1+inflation,years);
@@ -169,8 +169,13 @@ function calc(){
   document.getElementById('r-gap').style.color=gap>=0?'var(--success)':'var(--danger)';
   document.getElementById('r-extra').textContent=gap>=0?'No gap — on track':'₹'+Math.round(extraSIP/500)*500+' /month';
   const vd=document.getElementById('r-verdict');
-  if(gap>=0){vd.style.background='var(--success-l)';vd.style.color='#14532D';vd.style.borderColor='rgba(21,128,61,.2)';vd.textContent='✅ You are on track to retire at '+retireAge+'. Keep your current SIP and you'll reach your corpus goal with a surplus.';}
-  else{vd.style.background='var(--danger-l)';vd.style.color='#7F1D1D';vd.style.borderColor='rgba(220,38,38,.2)';vd.textContent='⚠ At your current savings rate, you will fall short by ₹'+(Math.abs(gap)/100000).toFixed(1)+' lakh. To close this gap, you need to invest an additional ₹'+Math.round(extraSIP/500)*500+' per month starting today.';}
+  if(gap>=0){
+    vd.style.background='var(--success-l)';vd.style.color='#14532D';vd.style.borderColor='rgba(21,128,61,.2)';
+    vd.textContent='On track to retire at age '+retireAge+'. Keep your SIP and you will reach your corpus goal.';
+  } else {
+    vd.style.background='var(--danger-l)';vd.style.color='#7F1D1D';vd.style.borderColor='rgba(220,38,38,.2)';
+    vd.textContent='At current savings rate, you will fall short by Rs '+(Math.abs(gap)/100000).toFixed(1)+' lakh. You need Rs '+Math.round(extraSIP/500)*500+' extra per month starting today.';
+  }
 }
 calc();
 </script>

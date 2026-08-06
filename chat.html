@@ -130,32 +130,45 @@ body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidd
 </div>
 
 <script>
-const SYSTEM = `You are a financial assistant for mywealth.fit, created by experienced investor and MF distributor Sutanu Bhowmick. You help Indian investors with practical, honest financial guidance.
+const SYSTEM = `You are a knowledgeable financial assistant at mywealth.fit, Bangalore.
+You are built on the expertise of Sutanu Bhowmick — 15 years in Indian equity markets, European banking background, NISM XA & XB certified, AMFI registered MF distributor.
 
-RULES:
-- Always focus on India — Indian markets,  regulations, Indian tax laws, Indian investment instruments
-- Be concise — mobile users need short, clear answers
-- Never recommend specific stocks as "buy now" — give educational context instead
-- Always suggest consulting Sutanu for personalised advice on major decisions
-- For portfolio reviews, direct users to mywealth.fit/review.html
-- Be warm and human — not a robot, not a salesperson
-- Keep responses under 150 words unless the question requires detail
--  disclaimer: remind users this is educational, not personalised advice, for complex questions`;
+You help Indian investors with practical, honest financial guidance.
 
-let msgs = [{role:'assistant', content:"👋 Hi! I'm the mywealth.fit assistant — built on Sutanu Bhowmick's 15 years of investment experience as a experienced investor.\n\nAsk me anything about your money — no judgment, no sales pitch."}];
+KEY RULES:
+- Focus on India — Indian markets, tax laws, regulations, investment instruments
+- Be concise — mobile users need short clear answers  
+- Always cite source for any tax claim (e.g. Section 112A, Finance Act 2024)
+- If uncertain, say "verify with a CA"
+- Never say "buy this stock now" without caveats
+- Suggest /review for portfolio analysis, /risk for risk profiling, /retire for retirement planning
+- Keep responses under 200 words unless detail is genuinely needed
+
+VERIFIED TAX RULES (FY2025-26):
+- LTCG on equity/equity MF: 0% up to ₹1.25L/year, 12.5% above that (Section 112A, Finance Act 2024), holding 12+ months
+- STCG on equity/equity MF: 20% (Section 111A), holding under 12 months
+- EPF withdrawal 5+ years service: fully tax free (Section 10(12) IT Act)
+- New tax regime: 0% up to ₹4L, 5% ₹4-8L, 10% ₹8-12L, 15% ₹12-16L, 20% ₹16-20L, 25% ₹20-24L, 30% above ₹24L
+- Section 87A rebate of ₹60,000 does NOT apply to STCG or LTCG from equity — only on slab-rate income
+- Foreign company RSU/ESOP: treated as unlisted under Indian law, STCG at slab rate under 24 months`;
+
+let msgs = [{role:'assistant', content:"👋 Hi! I am the mywealth.fit assistant — backed by Sutanu Bhowmick's 15 years of investing experience in Indian markets.\n\nAsk me anything about your money. No judgment, no sales pitch."}];
 let busy = false;
 
 function addMsg(role, text) {
   const div = document.createElement('div');
   div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
+  div.style.whiteSpace = 'pre-wrap';
   div.textContent = text;
-  document.getElementById('msgs').appendChild(div);
+  const container = document.getElementById('msgs');
+  container.appendChild(div);
   div.scrollIntoView({behavior:'smooth', block:'end'});
   return div;
 }
 
 function sendChip(el) {
-  document.getElementById('msg-input').value = el.textContent;
+  const input = document.getElementById('msg-input');
+  input.value = el.textContent;
   document.getElementById('chips').style.display = 'none';
   sendMsg();
 }
@@ -164,13 +177,17 @@ async function sendMsg() {
   const input = document.getElementById('msg-input');
   const text = input.value.trim();
   if (!text || busy) return;
-  input.value = ''; input.style.height = 'auto';
-  busy = true; document.getElementById('send-btn').disabled = true;
+
+  input.value = '';
+  input.style.height = 'auto';
+  busy = true;
+  document.getElementById('send-btn').disabled = true;
   document.getElementById('chips').style.display = 'none';
 
   addMsg('user', text);
   msgs.push({role:'user', content:text});
 
+  // Show typing indicator
   const typingEl = document.createElement('div');
   typingEl.className = 'msg ai typing';
   typingEl.innerHTML = '<div class="dot-pulse"></div><div class="dot-pulse"></div><div class="dot-pulse"></div>';
@@ -179,45 +196,75 @@ async function sendMsg() {
 
   try {
     const res = await fetch('/.netlify/functions/chat', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         messages: msgs.map(m => ({role:m.role, content:m.content})),
         system: SYSTEM
       })
     });
-    const data = await res.json();
+
     typingEl.remove();
-    // Handle both structured (new) and plain (fallback) responses
+
+    if (!res.ok) {
+      const errBody = await res.text().catch(()=>'');
+      let errMsg = 'Service unavailable (' + res.status + '). ';
+      if (res.status === 404) errMsg += 'The chat function is not deployed yet. Upload netlify/functions/chat.js to GitHub.';
+      else if (res.status === 500) errMsg += 'API key may not be set. Check Netlify environment variables.';
+      else errMsg += 'Please email openmind3555@gmail.com or try again.';
+      addMsg('assistant', errMsg);
+      busy = false;
+      document.getElementById('send-btn').disabled = false;
+      return;
+    }
+
+    const data = await res.json();
     let replyText = '';
+
     if (data.structured && data.data) {
       const d = data.data;
-      replyText = d.headline || '';
+      if (d.headline) replyText += d.headline;
       if (d.summary) replyText += '\n\n' + d.summary;
       if (d.cards && d.cards.length) {
         d.cards.forEach(card => {
-          if (card.type === 'stat') replyText += '\n\n' + card.label + ': ' + card.value + (card.sublabel ? ' (' + card.sublabel + ')' : '');
-          if (card.type === 'steps' && card.steps) replyText += '\n\n' + card.label + ':\n' + card.steps.map((s,i) => (i+1)+'. '+s).join('\n');
-          if (card.type === 'insight') replyText += '\n\n' + card.label + ': ' + card.text + (card.law ? ' [' + card.law + ']' : '');
+          if (card.type === 'stat' && card.label) {
+            replyText += '\n\n' + card.label + ': ' + (card.value||'');
+            if (card.sublabel) replyText += ' — ' + card.sublabel;
+          }
+          if (card.type === 'steps' && card.steps) {
+            replyText += '\n\n' + (card.label||'Steps') + ':';
+            card.steps.forEach((s,i) => { replyText += '\n' + (i+1) + '. ' + s; });
+          }
+          if (card.type === 'insight' && card.text) {
+            replyText += '\n\n' + (card.label ? card.label + ': ' : '') + card.text;
+            if (card.law) replyText += ' [' + card.law + ']';
+          }
         });
       }
       if (d.action) replyText += '\n\n→ ' + d.action;
-      if (d.upsell && d.upsell.show && d.upsell.product) {
-        replyText += '\n\n💡 ' + d.upsell.hook + ' → mywealth.fit/' + d.upsell.product;
+      if (d.upsell && d.upsell.show && d.upsell.hook) {
+        replyText += '\n\n💡 ' + d.upsell.hook;
       }
+    } else if (data.reply) {
+      replyText = data.reply;
+    } else if (data.error) {
+      replyText = 'Sorry — ' + data.error + '. Try emailing openmind3555@gmail.com';
     } else {
-      replyText = data.reply || data.error || 'Something went wrong. Please try again.';
+      replyText = 'Something went wrong. Please try again.';
     }
-    addMsg('assistant', replyText);
-    msgs.push({role:'assistant', content:replyText});
-  } catch(e) {
+
+    addMsg('assistant', replyText.trim());
+    msgs.push({role:'assistant', content:replyText.trim()});
+
+  } catch(err) {
     typingEl.remove();
-    addMsg('assistant', 'Sorry, I'm having trouble connecting. Please try again or email openmind3555@gmail.com');
+    addMsg('assistant', 'Connection error: ' + err.message + '. Please check your internet and try again.');
+    console.error('Chat error:', err);
   }
 
-  busy = false; document.getElementById('send-btn').disabled = false;
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
   document.getElementById('msg-input').focus();
 }
 </script>
 </body>
-</html>
