@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>My Recommended Allocation — mywealth.fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d2244;--gold:#C9963A;--gold-l:#FDF6E8;--cream:#FAFAF7;--white:#fff;--ink:#1A1A2E;--muted:#6B7280;--border:#E5E7EB;--success:#15803D;--success-l:#F0FDF4;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+a{color:inherit;text-decoration:none}
+input,select{font-family:inherit}
+.nav{background:var(--navy);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.nav-back{color:rgba(255,255,255,.7);font-size:14px;flex:1}
+.nav-title{font-size:15px;font-weight:600;color:#fff;text-align:center;flex:2}
+.nav-spacer{flex:1}
+
+/* HERO */
+.hero{background:var(--navy);padding:28px 20px;text-align:center}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.hero-title{font-size:clamp(20px,5vw,28px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:6px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.6)}
+
+/* INPUTS */
+.inputs-section{padding:20px;max-width:520px;margin:0 auto}
+.inp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.inp-card-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.field{margin-bottom:12px}
+.field label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);display:block;margin-bottom:5px}
+.inp{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;width:100%;color:var(--ink);background:var(--white)}
+.inp:focus{outline:none;border-color:var(--navy)}
+.amount-display{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px}
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--border);outline:none;margin-top:6px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--navy);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(13,34,68,.2)}
+
+/* LIFE SITUATION */
+.situ-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.situ-btn{background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .12s;font-size:13px;font-weight:500;color:var(--muted)}
+.situ-btn:hover{border-color:var(--navy)}
+.situ-btn.active{border-color:var(--navy);background:rgba(13,34,68,.04);color:var(--navy);font-weight:600}
+.situ-icon{font-size:20px;display:block;margin-bottom:4px}
+
+/* GOALS */
+.goal-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}
+.goal-check{width:20px;height:20px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:11px;font-weight:700}
+.goal-check.checked{background:var(--navy);border-color:var(--navy);color:#fff}
+.goal-label{flex:1;cursor:pointer}
+
+/* RESULT */
+.result-section{padding:0 20px 32px;max-width:520px;margin:0 auto}
+.result-profile-strip{background:var(--navy);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.rps-label{font-size:12px;color:rgba(255,255,255,.5)}
+.rps-val{font-size:16px;font-weight:700;color:var(--gold)}
+
+/* ALLOCATION VIZ */
+.alloc-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.alloc-bar-big{height:24px;display:flex;overflow:hidden}
+.alloc-seg{height:100%;transition:width .5s ease}
+.alloc-rows{padding:14px 16px}
+.alloc-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px}
+.alloc-row:last-child{margin-bottom:0}
+.ar-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.ar-label{flex:1;font-weight:500}
+.ar-pct{font-weight:700;width:36px;text-align:right}
+.ar-amount{color:var(--muted);width:80px;text-align:right;font-size:13px}
+.ar-bar{flex:2;height:8px;background:var(--cream);border-radius:4px;overflow:hidden}
+.ar-fill{height:100%;border-radius:4px}
+
+/* FUND SUGGESTIONS */
+.fund-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.fc-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fc-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.fc-category{font-size:13px;font-weight:700;color:var(--ink)}
+.fc-amount{margin-left:auto;font-size:14px;font-weight:700;color:var(--navy)}
+.fc-items{display:flex;flex-direction:column;gap:4px}
+.fc-item{font-size:12px;color:var(--muted);padding-left:18px;line-height:1.5}
+.fc-why{font-size:12px;color:var(--muted);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);line-height:1.5;font-style:italic}
+
+/* INSIGHTS */
+.insight-card{background:var(--cream);border-radius:var(--r);padding:13px 15px;margin-bottom:10px}
+.ic-emoji{font-size:18px;margin-bottom:5px}
+.ic-text{font-size:13px;color:var(--muted);line-height:1.65}
+.ic-text b{color:var(--ink)}
+
+/* CTA */
+.cta-block{background:var(--navy);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:12px}
+.cta-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:6px}
+.cta-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:14px;line-height:1.6}
+.btn-gold{background:var(--gold);color:var(--navy);font-size:15px;font-weight:700;padding:13px 20px;border-radius:8px;display:block;text-align:center;margin-bottom:8px}
+.btn-outline-w{background:transparent;color:rgba(255,255,255,.6);font-size:13px;padding:8px;border-radius:8px;display:block;text-align:center;border:1px solid rgba(255,255,255,.15)}
+.safe{height:40px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="risk.html" class="nav-back">← Risk profile</a>
+  <div class="nav-title">My Allocation</div>
+  <div class="nav-spacer"></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Personalised to your profile</div>
+  <div class="hero-title">What should your portfolio look like?</div>
+  <div class="hero-sub">Based on your risk profile, goals, and amount to invest</div>
+</div>
+
+<div class="inputs-section">
+
+  <div class="inp-card">
+    <div class="inp-card-title">How much do you want to invest?</div>
+    <div class="amount-display" id="amount-display">Rs 5 lakh</div>
+    <input type="range" id="amount-slider" min="100000" max="10000000" step="100000" value="500000" oninput="updateAmount(this.value)">
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>Rs 1L</span><span>Rs 1 Cr</span></div>
+  </div>
+
+  <div class="inp-card">
+    <div class="inp-card-title">Who are you? <span style="font-size:12px;font-weight:400;color:var(--muted)">(this changes your allocation)</span></div>
+    <div class="situ-grid" id="situ-grid">
+      <div class="situ-btn" onclick="selectSitu('new',this)"><span class="situ-icon">🌱</span>New investor</div>
+      <div class="situ-btn" onclick="selectSitu('salaried',this)"><span class="situ-icon">💼</span>Salaried</div>
+      <div class="situ-btn" onclick="selectSitu('business',this)"><span class="situ-icon">🏢</span>Business owner</div>
+      <div class="situ-btn" onclick="selectSitu('homemaker',this)"><span class="situ-icon">🏠</span>Homemaker</div>
+      <div class="situ-btn" onclick="selectSitu('senior',this)"><span class="situ-icon">🌅</span>Senior / Retired</div>
+      <div class="situ-btn" onclick="selectSitu('woman',this)"><span class="situ-icon">💪</span>Women investor</div>
+    </div>
+  </div>
+
+  <div class="inp-card">
+    <div class="inp-card-title">What are your goals? <span style="font-size:12px;font-weight:400;color:var(--muted)">(tick all that apply)</span></div>
+    <div id="goals-list"></div>
+  </div>
+
+</div>
+
+<div class="result-section" id="result-section" style="display:none">
+
+  <div class="result-profile-strip">
+    <div><div class="rps-label">Your risk profile</div><div class="rps-val" id="rps-profile">MODERATE</div></div>
+    <div style="text-align:right"><div class="rps-label">Investing</div><div class="rps-val" id="rps-amount">Rs 5L</div></div>
+  </div>
+
+  <div class="alloc-visual">
+    <div class="alloc-bar-big" id="alloc-bar"></div>
+    <div class="alloc-rows" id="alloc-rows"></div>
+  </div>
+
+  <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px">Suggested fund categories</div>
+  <div id="fund-cards"></div>
+
+  <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 10px">What this means in plain English</div>
+  <div id="insights"></div>
+
+  <div class="cta-block">
+    <div class="cta-title">Want a personalised plan for your actual money?</div>
+    <div class="cta-sub">This is a starting point. Sutanu will refine it based on your exact goals, tax situation, and current savings — and deliver a complete plan within 24 hours.</div>
+    <a href="mailto:openmind3555@gmail.com?subject=Portfolio Plan Request" id="cta-email" class="btn-gold">Email Sutanu for a personalised plan →</a>
+    <a href="risk.html" class="btn-outline-w">Re-do risk profile</a>
+    <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:10px">Or email directly: <span style="color:rgba(255,255,255,.6);font-weight:500">openmind3555@gmail.com</span></div>
+  </div>
+
+</div>
+<div class="safe"></div>
+
+<script>
+const ALLOC_COLORS = {
+  equity:'#0d2244', largecap:'#162f5c', midcap:'#2563eb', flexicap:'#3b82f6',
+  debt:'#C9963A', gsec:'#d97706', debtmf:'#f59e0b',
+  liquid:'#10b981', fd:'#6366f1', gold:'#fbbf24', reit:'#ec4899', ppf:'#8b5cf6'
+};
+
+let state = {
+  amount: 500000,
+  situation: '',
+  profile: 'MODERATE',
+  score: 60,
+  goals: new Set()
+};
+
+const GOALS_BY_SITU = {
+  new:       ['Emergency fund first','Start a SIP habit','Buy a home','Child education','Long-term wealth'],
+  salaried:  ['Emergency fund','Retirement corpus','Child education','Home purchase','Tax saving (80C)','Long-term wealth'],
+  business:  ['Personal safety net (ring-fence from business)','Business expansion capital','Retirement','Emergency fund','Estate / legacy'],
+  homemaker: ['Family emergency fund','Child education','Financial independence','Long-term wealth','Gold / jewellery equivalent'],
+  senior:    ['Monthly income (SWP)','Healthcare buffer','Capital preservation','Estate / legacy for family'],
+  woman:     ['Emergency fund (own, independent)','Financial independence','Career break buffer','Retirement','Child education']
+};
+
+const ALLOC_BY_PROFILE_SITU = {
+  Conservative: {
+    new:       [{cat:'Liquid fund',pct:30,color:'liquid',why:'Your emergency fund comes first. Until you have 3-6 months of expenses in a liquid fund, nothing else matters.',items:['Parag Parikh Liquid Fund','SBI Liquid Fund']},{cat:'Short-term debt MF',pct:50,color:'debt',why:'Stable, better than FD returns, tax-efficient after 3 years.',items:['HDFC Short Term Debt Fund','ICICI Pru Short Term']},{cat:'Large-cap equity MF (SIP)',pct:15,color:'equity',why:'Small equity exposure to start building the habit. Start a SIP — even Rs 1,000/month.',items:['Nifty 50 Index Fund','Mirae Asset Large Cap']},{cat:'Gold ETF',pct:5,color:'gold',why:'Inflation hedge. Small but important.',items:['Nippon Gold ETF','HDFC Gold ETF']}],
+    senior:    [{cat:'Liquid + FD',pct:25,color:'liquid',why:'Immediate access for healthcare or emergencies. Never touch your investment corpus for this.',items:['Liquid fund or sweep FD']},{cat:'G-Sec / SCSS / PMVVY',pct:45,color:'gsec',why:'Government-backed, fixed income. Senior Citizens Savings Scheme gives 8.2% guaranteed — use the full Rs 30L limit.',items:['SCSS (8.2%)', 'PMVVY', '10-year G-Sec']},{cat:'Short-term debt MF',pct:20,color:'debt',why:'Slightly higher return than FD, liquid when needed.',items:['HDFC Short Term Debt','Axis Banking & PSU Fund']},{cat:'Gold ETF',pct:10,color:'gold',why:'Inflation protection for the long haul.',items:['Nippon Gold ETF']}],
+    default:   [{cat:'Liquid fund',pct:20,color:'liquid',why:'Emergency buffer — keep 6 months of expenses here.',items:['Parag Parikh Liquid Fund']},{cat:'Short-term debt MF',pct:55,color:'debt',why:'Core of a conservative portfolio — stable, tax-efficient.',items:['HDFC Short Term Debt','ICICI Pru Short Term']},{cat:'Large-cap equity MF',pct:15,color:'equity',why:'Minimum equity for inflation-beating returns.',items:['Nifty 50 Index Fund']},{cat:'Gold ETF',pct:10,color:'gold',why:'Inflation hedge.',items:['Nippon Gold ETF']}]
+  },
+  Moderate: {
+    new:       [{cat:'Liquid fund (emergency first)',pct:25,color:'liquid',why:'Rule 1 of investing: build your emergency fund before anything else. 3-6 months of expenses in liquid form.',items:['Parag Parikh Liquid Fund','Any liquid fund']},{cat:'Flexi-cap MF (SIP)',pct:45,color:'flexicap',why:'Best starting point for equity — diversified across large, mid, and small-cap. Start a monthly SIP.',items:['Parag Parikh Flexi Cap','Mirae Asset Flexi Cap']},{cat:'Short-term debt MF',pct:20,color:'debt',why:'Stability buffer. When markets fall, this part holds steady.',items:['HDFC Short Term Debt','ICICI Pru Short Term']},{cat:'Gold ETF',pct:10,color:'gold',why:'Gold tends to rise when equity falls — natural hedge.',items:['Nippon Gold ETF','HDFC Gold ETF']}],
+    business:  [{cat:'Liquid / FD (personal safety net)',pct:35,color:'liquid',why:'Non-negotiable for business owners. This must be completely ring-fenced from the business — different bank, different account. Can survive 2 years with zero business income.',items:['Liquid fund','Sweep FD at a different bank']},{cat:'Flexi-cap + large-cap equity MF',pct:35,color:'equity',why:'Personal wealth building — independent of the business.',items:['Parag Parikh Flexi Cap','Mirae Asset Large Cap']},{cat:'Short-term debt MF',pct:20,color:'debt',why:'Stability. Business income is already volatile — personal portfolio should not be.',items:['HDFC Short Term Debt']},{cat:'Gold ETF / REIT',pct:10,color:'gold',why:'Gold for inflation, REIT for passive income if eligible.',items:['Nippon Gold ETF','Embassy REIT']}],
+    salaried:  [{cat:'Emergency fund (liquid)',pct:15,color:'liquid',why:'Keep 6 months of expenses in a liquid fund. This is not part of your investment — it is your financial airbag.',items:['Parag Parikh Liquid Fund']},{cat:'Flexi-cap equity MF',pct:40,color:'flexicap',why:'Core equity holding. Invest via SIP — every month, regardless of market level.',items:['Parag Parikh Flexi Cap','Mirae Asset Flexi Cap']},{cat:'Large + mid-cap MF',pct:20,color:'equity',why:'Additional equity for higher return potential.',items:['Mirae Asset Large & Midcap','Kotak Equity Opp Fund']},{cat:'Short-term debt MF',pct:15,color:'debt',why:'Stability and lower tax than FD after 3 years.',items:['HDFC Short Term Debt']},{cat:'Gold ETF',pct:10,color:'gold',why:'Gold has given 11-13% CAGR over the last 10 years in India — and it moves opposite to equity in crises.',items:['Nippon Gold ETF']}],
+    homemaker: [{cat:'Family emergency fund',pct:20,color:'liquid',why:'The most important thing: your own emergency fund, in your name, that you control. Independent of household finances.',items:['Liquid fund in your name']},{cat:'Flexi-cap MF (SIP)',pct:45,color:'flexicap',why:'Long-term wealth building. Even Rs 2,000/month via SIP over 20 years at 12% grows to Rs 20 lakh.',items:['Parag Parikh Flexi Cap','Mirae Asset Flexi Cap']},{cat:'PPF (Rs 1.5L/year)',pct:20,color:'ppf',why:'Risk-free, 7.1% guaranteed, completely tax-free. One of the best instruments for risk-averse investors.',items:['PPF at any bank or post office']},{cat:'Gold ETF',pct:15,color:'gold',why:'Equivalent to physical gold but without storage risk. Liquid, transparent.',items:['Nippon Gold ETF']}],
+    woman:     [{cat:'Own emergency fund (independent)',pct:20,color:'liquid',why:'Financial independence starts here. Your own fund, in your name, at a bank account only you control.',items:['Liquid fund or sweep FD']},{cat:'Flexi-cap MF (SIP)',pct:40,color:'flexicap',why:'Systematic investing over time is the most powerful wealth-building tool available to anyone.',items:['Parag Parikh Flexi Cap']},{cat:'PPF (tax-free)',pct:20,color:'ppf',why:'Long-term guaranteed returns. Perfect for goals 15+ years away.',items:['PPF account']},{cat:'Gold ETF',pct:10,color:'gold',why:'Gold is a proven store of value across generations.',items:['Nippon Gold ETF']},{cat:'Debt MF (stability)',pct:10,color:'debt',why:'Stability buffer.',items:['Short-term debt MF']}],
+    default:   [{cat:'Liquid fund',pct:15,color:'liquid',why:'Emergency buffer.',items:['Any liquid fund']},{cat:'Flexi-cap equity MF',pct:55,color:'flexicap',why:'Core growth engine.',items:['Parag Parikh Flexi Cap','Mirae Asset Flexi Cap']},{cat:'Debt MF',pct:20,color:'debt',why:'Stability.',items:['Short-term debt MF']},{cat:'Gold ETF',pct:10,color:'gold',why:'Hedge.',items:['Nippon Gold ETF']}]
+  },
+  Growth: {
+    default:   [{cat:'Flexi-cap equity MF',pct:40,color:'flexicap',why:'Core — diversified across market caps.',items:['Parag Parikh Flexi Cap','Mirae Asset Flexi Cap']},{cat:'Large + mid-cap MF',pct:25,color:'equity',why:'Higher growth potential than pure large-cap.',items:['Mirae Asset Large & Midcap']},{cat:'Mid + small-cap MF',pct:15,color:'midcap',why:'Highest growth potential — but only if you can hold for 7+ years.',items:['Nippon India Small Cap','Axis Midcap Fund']},{cat:'Short-term debt',pct:12,color:'debt',why:'Stability anchor. Helps you NOT panic sell equity during corrections.',items:['HDFC Short Term Debt']},{cat:'Gold ETF',pct:8,color:'gold',why:'Rebalancing asset.',items:['Nippon Gold ETF']}]
+  },
+  Aggressive: {
+    default:   [{cat:'Flexi-cap MF',pct:30,color:'flexicap',why:'Core diversified equity holding.',items:['Parag Parikh Flexi Cap']},{cat:'Mid + small-cap MF',pct:35,color:'midcap',why:'Maximum growth potential. Only for 10+ year horizon.',items:['Nippon India Small Cap','Axis Midcap']},{cat:'Sectoral / thematic',pct:15,color:'equity',why:'Concentrated bets on specific themes — technology, pharma, defence.',items:['DSP Healthcare','Mirae Asset Digital India']},{cat:'Short-term debt',pct:12,color:'debt',why:'Minimum stability to avoid panic selling.',items:['Debt MF or G-Sec']},{cat:'Gold ETF',pct:8,color:'gold',why:'Insurance against tail risk.',items:['Nippon Gold ETF']}]
+  }
+};
+
+const INSIGHTS_BY_SITU = {
+  new:"<div class='insight-card'><div class='ic-emoji'>🌱</div><div class='ic-text'><b>Start with the emergency fund — always.</b> Before any SIP, any stock, any investment — put 3 months of your expenses in a liquid fund. That is your financial foundation. Nothing else should come first.</div></div><div class='insight-card'><div class='ic-emoji'>📅</div><div class='ic-text'><b>A SIP of Rs 5,000 a month at 12% over 20 years grows to Rs 50 lakh.</b> The amount matters less than the habit. Start small and start now — even Rs 1,000 a month is better than waiting to invest a large amount later.</div></div><div class='insight-card'><div class='ic-emoji'>📉</div><div class='ic-text'><b>Your first market fall will feel like a disaster.</b> It is not. Every index fund investor who held through COVID (March 2020, Nifty fell 38%) and did not sell, doubled their money by December 2021. The lesson: do not sell in panic.</div></div>",
+  salaried:"<div class='insight-card'><div class='ic-emoji'>🧾</div><div class='ic-text'><b>Your biggest enemy is tax drag on FDs.</b> If you are in the 30% tax bracket, a 7% FD gives you 4.9% post-tax — below inflation. Switch to debt mutual funds for the same stability with better tax treatment after 3 years.</div></div><div class='insight-card'><div class='ic-emoji'>⚖️</div><div class='ic-text'><b>Rebalance once a year — on the same date every year.</b> If equity has grown to 70% of your portfolio (from 60%), sell some equity and buy debt to restore 60/40. This forces you to sell high and buy low automatically.</div></div>",
+  business:"<div class='insight-card'><div class='ic-emoji'>🛡️</div><div class='ic-text'><b>The personal safety net is not optional.</b> Business owners who keep personal and business money mixed are one bad quarter away from a personal financial crisis. Your personal portfolio must be able to sustain your family for 24 months with zero business income.</div></div><div class='insight-card'><div class='ic-emoji'>📊</div><div class='ic-text'><b>Two portfolios, two strategies.</b> Business capital: growth-oriented, accept higher risk, short to medium horizon. Personal portfolio: stable, conservative, liquid. Never mix them — not even mentally.</div></div>",
+  homemaker:"<div class='insight-card'><div class='ic-emoji'>💪</div><div class='ic-text'><b>Financial independence is not about the amount — it is about having your own account.</b> Even Rs 500 a month invested in your name, over 20 years, compounds into a meaningful corpus. Start in your name, for your security.</div></div><div class='insight-card'><div class='ic-emoji'>🥇</div><div class='ic-text'><b>PPF is one of the best investments for anyone with a 15-year horizon.</b> 7.1% guaranteed, completely tax-free (interest + maturity), government-backed, and available at any bank. Invest up to Rs 1.5 lakh a year.</div></div>",
+  senior:"<div class='insight-card'><div class='ic-emoji'>🏥</div><div class='ic-text'><b>Healthcare is your biggest financial risk.</b> A single hospitalisation can cost Rs 3-8 lakh and wipe out years of savings. Keep a separate healthcare buffer of Rs 10-20 lakh in a liquid/short-term debt fund — never invested in equity.</div></div><div class='insight-card'><div class='ic-emoji'>💰</div><div class='ic-text'><b>The Senior Citizens Savings Scheme (SCSS) gives 8.2% guaranteed, quarterly payouts, government-backed.</b> You can invest up to Rs 30 lakh per person (Rs 60 lakh for a couple). This should be the first allocation for any senior investor.</div></div>",
+  woman:"<div class='insight-card'><div class='ic-emoji'>🔐</div><div class='ic-text'><b>Your financial independence is your most valuable asset.</b> Having your own savings, in your own name, at your own bank — gives you options at every stage of life. This is not about distrust — it is about agency.</div></div><div class='insight-card'><div class='ic-emoji'>📈</div><div class='ic-text'><b>Women investors statistically outperform men</b> because they trade less and let compounding work. The biggest mistake in investing is over-trading. Set up a SIP, review once a year, do not react to daily market news.</div></div>"
+};
+
+// Read URL params
+const params = new URLSearchParams(window.location.search);
+const urlCode = params.get('code') || '';
+const urlType = params.get('type') || '';
+if(urlCode){
+  const parts = urlCode.split('-');
+  state.profile = parts[0] || 'MODERATE';
+  state.score = parseInt(parts[1])||60;
+}
+if(urlType) {
+  state.situation = urlType==='active'?'salaried':urlType==='new'?'new':'salaried';
+}
+
+function updateAmount(val){
+  state.amount=+val;
+  const display=val>=10000000?'Rs '+(val/10000000).toFixed(1)+' Cr':val>=100000?'Rs '+(val/100000).toFixed(1)+' lakh':'Rs '+Number(val).toLocaleString('en-IN');
+  document.getElementById('amount-display').textContent=display;
+  if(state.situation) render();
+}
+
+function selectSitu(situ,el){
+  state.situation=situ;
+  document.querySelectorAll('.situ-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // Update goals
+  renderGoals();
+  render();
+}
+
+function renderGoals(){
+  const goals=(GOALS_BY_SITU[state.situation]||GOALS_BY_SITU.salaried);
+  document.getElementById('goals-list').innerHTML=goals.map(g=>`
+    <div class="goal-row" onclick="toggleGoal('${g}',this)">
+      <div class="goal-check ${state.goals.has(g)?'checked':''}">${state.goals.has(g)?'✓':''}</div>
+      <div class="goal-label">${g}</div>
+    </div>`).join('');
+}
+
+function toggleGoal(g,row){
+  if(state.goals.has(g)){state.goals.delete(g);row.querySelector('.goal-check').className='goal-check';row.querySelector('.goal-check').textContent='';}
+  else{state.goals.add(g);row.querySelector('.goal-check').className='goal-check checked';row.querySelector('.goal-check').textContent='✓';}
+  // Auto-refresh allocation if situation already selected
+  if(state.situation) render();
+}
+
+function getAlloc(){
+  const profiles=ALLOC_BY_PROFILE_SITU;
+  const byProfile=profiles[state.profile]||profiles.Moderate;
+  return byProfile[state.situation]||byProfile.default;
+}
+
+function fmtL(n){
+  if(n>=10000000) return 'Rs '+(n/10000000).toFixed(1)+' Cr';
+  if(n>=100000) return 'Rs '+(n/100000).toFixed(1)+' L';
+  return 'Rs '+Math.round(n).toLocaleString('en-IN');
+}
+
+function render(){
+  const alloc=getAlloc();
+  document.getElementById('result-section').style.display='block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+
+  document.getElementById('rps-profile').textContent=state.profile+' ('+state.score+'/24)';
+  document.getElementById('rps-amount').textContent=fmtL(state.amount);
+
+  // Allocation bar
+  document.getElementById('alloc-bar').innerHTML=alloc.map(a=>`<div class="alloc-seg" style="width:${a.pct}%;background:${ALLOC_COLORS[a.color]||'#6B7280'}"></div>`).join('');
+
+  // Allocation rows
+  document.getElementById('alloc-rows').innerHTML=alloc.map(a=>{
+    const amt=state.amount*a.pct/100;
+    return `<div class="alloc-row">
+      <div class="ar-dot" style="background:${ALLOC_COLORS[a.color]||'#6B7280'}"></div>
+      <div class="ar-label">${a.cat}</div>
+      <div class="ar-bar"><div class="ar-fill" style="width:${a.pct}%;background:${ALLOC_COLORS[a.color]||'#6B7280'}"></div></div>
+      <div class="ar-pct">${a.pct}%</div>
+      <div class="ar-amount">${fmtL(amt)}</div>
+    </div>`;
+  }).join('');
+
+  // Fund cards
+  document.getElementById('fund-cards').innerHTML=alloc.map(a=>{
+    const amt=state.amount*a.pct/100;
+    return `<div class="fund-card">
+      <div class="fc-header">
+        <div class="fc-dot" style="background:${ALLOC_COLORS[a.color]||'#6B7280'}"></div>
+        <div class="fc-category">${a.cat}</div>
+        <div class="fc-amount">${fmtL(amt)}</div>
+      </div>
+      <div class="fc-items">${a.items.map(i=>`<div class="fc-item">→ ${i}</div>`).join('')}</div>
+      <div class="fc-why">${a.why}</div>
+    </div>`;
+  }).join('');
+
+  // Insights
+  document.getElementById('insights').innerHTML=INSIGHTS_BY_SITU[state.situation]||INSIGHTS_BY_SITU.salaried;
+
+  // CTA email
+  const emailSubject='Portfolio Plan Request — '+state.profile+' profile, '+fmtL(state.amount);
+  document.getElementById('cta-email').href='mailto:openmind3555@gmail.com?subject='+encodeURIComponent(emailSubject);
+
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth'});
+}
+
+// Pre-select situation from URL
+if(state.situation){
+  const btns=document.querySelectorAll('.situ-btn');
+  const situations=['new','salaried','business','homemaker','senior','woman'];
+  const idx=situations.indexOf(state.situation);
+  if(idx>=0) btns[idx].classList.add('active');
+  renderGoals();
+  render();
+} else {
+  renderGoals();
+}
+</script>
+</body>
+</html>
