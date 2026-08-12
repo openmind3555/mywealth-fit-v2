@@ -244,40 +244,65 @@ async function sendMsg() {
     const data = await res.json();
     let replyText = '';
 
-    // Parse and render response
+    // Parse response — handle both structured and plain text
     let parsedResp = null;
-    if (data.structured && data.data) parsedResp = data.data;
-    else if (data.reply) { try { parsedResp = JSON.parse(data.reply); } catch(e){} }
+    if (data.structured && data.data) {
+      parsedResp = data.data;
+    } else if (data.reply) {
+      // Try parsing plain reply as JSON (happens when chat.js falls back)
+      try { parsedResp = JSON.parse(data.reply); } catch(e) {
+        // Not JSON — use as plain text
+        replyText = data.reply;
+      }
+    } else if (data.error) {
+      replyText = 'Error: ' + data.error + '. Email openmind3555@gmail.com';
+    }
 
-    if (parsedResp && parsedResp.type === 'tool' && parsedResp.tool && parsedResp.tool !== 'null') {
-      // Tool card with navigation button
-      const toolDiv = document.createElement('div');
-      toolDiv.className = 'msg ai';
-      toolDiv.style.cssText = 'padding:0;overflow:hidden;max-width:88%';
-      toolDiv.innerHTML =
-        '<div style="padding:14px 15px">' +
-        '<div style="font-size:14px;font-weight:500;color:#1A1A2E;margin-bottom:6px">' + (parsedResp.headline || 'I have the right tool for this') + '</div>' +
-        '<div style="font-size:13px;color:#6B7280;margin-bottom:12px;line-height:1.5">' + (parsedResp.tool_desc || '') + '</div>' +
-        '<a href="' + parsedResp.tool + '.html" style="background:#0d2244;color:#fff;font-size:14px;font-weight:600;padding:11px 16px;border-radius:8px;display:block;text-align:center;text-decoration:none">' +
-        (parsedResp.tool_label || 'Open tool') + ' →</a>' +
-        (parsedResp.action ? '<div style="font-size:12px;color:#9CA3AF;margin-top:8px;text-align:center">' + parsedResp.action + '</div>' : '') +
-        '</div>';
-      document.getElementById('msgs').appendChild(toolDiv);
-      toolDiv.scrollIntoView({behavior:'smooth',block:'end'});
-      msgs.push({role:'assistant', content: parsedResp.tool_label || 'Tool suggested'});
-    } else {
-      // Text answer
-      if (parsedResp) {
+    if (parsedResp) {
+      if (parsedResp.type === 'tool' && parsedResp.tool && parsedResp.tool !== 'null') {
+        // ── TOOL CARD with navigation button ──
+        const toolDiv = document.createElement('div');
+        toolDiv.className = 'msg ai';
+        toolDiv.style.cssText = 'padding:0;overflow:hidden;max-width:92%;border:1.5px solid #E5E7EB';
+        const toolFile = parsedResp.tool.endsWith('.html') ? parsedResp.tool : parsedResp.tool + '.html';
+        toolDiv.innerHTML =
+          '<div style="padding:14px 15px">' +
+            '<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#C9963A;margin-bottom:6px">Use this tool</div>' +
+            '<div style="font-size:15px;font-weight:600;color:#1A1A2E;margin-bottom:6px">' + (parsedResp.tool_label || parsedResp.tool) + '</div>' +
+            '<div style="font-size:13px;color:#6B7280;margin-bottom:12px;line-height:1.5">' + (parsedResp.tool_desc || parsedResp.headline || '') + '</div>' +
+            '<a href="' + toolFile + '" style="background:#0d2244;color:#fff;font-size:14px;font-weight:600;padding:12px 16px;border-radius:8px;display:block;text-align:center;text-decoration:none">' +
+            'Open ' + (parsedResp.tool_label || 'tool') + ' →</a>' +
+            (parsedResp.action ? '<div style="font-size:12px;color:#9CA3AF;margin-top:8px;text-align:center">' + parsedResp.action + '</div>' : '') +
+          '</div>';
+        document.getElementById('msgs').appendChild(toolDiv);
+        toolDiv.scrollIntoView({behavior:'smooth', block:'end'});
+        const content = 'Suggested: ' + (parsedResp.tool_label || parsedResp.tool);
+        msgs.push({role:'assistant', content});
+      } else {
+        // ── TEXT ANSWER from structured response ──
         if (parsedResp.headline) replyText += parsedResp.headline;
         if (parsedResp.summary) replyText += '\n\n' + parsedResp.summary;
+        if (parsedResp.cards && parsedResp.cards.length) {
+          parsedResp.cards.forEach(card => {
+            if (card.type === 'stat' && card.label) replyText += '\n\n' + card.label + ': ' + (card.value||'') + (card.sublabel ? ' ('+card.sublabel+')' : '');
+            if (card.type === 'insight' && card.text) replyText += '\n\n' + (card.label ? card.label + ': ' : '') + card.text + (card.law ? ' ['+card.law+']' : '');
+            if (card.type === 'steps' && card.steps) replyText += '\n\n' + (card.label||'Steps') + ':\n' + card.steps.map((s,i)=>(i+1)+'. '+s).join('\n');
+          });
+        }
         if (parsedResp.action) replyText += '\n\n→ ' + parsedResp.action;
-      } else if (data.reply) {
-        replyText = data.reply;
-      } else if (data.error) {
-        replyText = 'Error: ' + data.error + '. Email openmind3555@gmail.com';
+        if (!replyText && parsedResp.tool_desc) replyText = parsedResp.tool_desc;
+        addMsg('assistant', replyText.trim() || 'Got it. How can I help further?');
+        msgs.push({role:'assistant', content: replyText.trim()});
       }
-      addMsg('assistant', replyText.trim() || 'Something went wrong. Please try again.');
-      msgs.push({role:'assistant', content: replyText.trim()});
+    } else {
+      // Plain text response
+      if (replyText) {
+        addMsg('assistant', replyText.trim());
+        msgs.push({role:'assistant', content: replyText.trim()});
+      } else {
+        addMsg('assistant', 'Something went wrong. Please try again.');
+        msgs.push({role:'assistant', content: 'error'});
+      }
     }
 
   } catch(err) {
