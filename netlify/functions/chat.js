@@ -139,7 +139,9 @@ RESPONSE FORMAT: Respond with clean JSON like this:
     }
 
     const parsed = extractJSON(text);
-    if (parsed && parsed.headline) {
+    // Return structured:true for ANY valid JSON object from the model
+    // (tool routing returns {type:'tool',...} without a headline field)
+    if (parsed && typeof parsed === 'object') {
       return {
         statusCode: 200,
         headers: { ...cors, 'Content-Type': 'application/json' },
